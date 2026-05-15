@@ -103,13 +103,13 @@ export const fallbackSiteContent: SiteContent = {
 
 export const fallbackMembers: Member[] = [
   {
-    name: "まなちゃん",
+    name: "ティラノ",
     role: "おやつ係兼、突然すごい線を引く人",
     comment: "金曜17時にだいたい現れる。クレヨンを持つとちょっと強い。",
     image: "/kupoo-mascot.svg"
   },
   {
-    name: "りょーゆ",
+    name: "てんとう虫",
     role: "ギャラリー係兼、余白に落書きする人",
     comment: "作品を並べたり、サイトをいじったり、長野方面の気配を察知したりする。",
     image: "/favicon.svg"

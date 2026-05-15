@@ -1,6 +1,6 @@
 ---
 title: "Sun voyager"
-author: "りょーゆ"
+author: "てんとう虫"
 slug: "sun-voyager"
 image: "/images/paintings/sun-voyager.jpg"
 date: "2026-04-30"

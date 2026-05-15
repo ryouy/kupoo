@@ -1,6 +1,6 @@
 ---
 title: "nitori-kuma"
-author: "まなちゃん"
+author: "ティラノ"
 slug: "nitori-kuma"
 image: "/images/paintings/nitori-kuma.png"
 date: "2025-06-09"

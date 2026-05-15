@@ -1,6 +1,6 @@
 ---
 title: "Quiet Afternoon"
-author: "りょーゆ"
+author: "てんとう虫"
 slug: "quiet-afternoon"
 image: "/images/paintings/quiet-afternoon.png"
 date: "2026-05-01"

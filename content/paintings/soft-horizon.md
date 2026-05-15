@@ -1,6 +1,6 @@
 ---
 title: "Soft Horizon"
-author: "まなちゃん"
+author: "ティラノ"
 slug: "soft-horizon"
 image: "/images/paintings/soft-horizon.png"
 date: "2026-05-08"

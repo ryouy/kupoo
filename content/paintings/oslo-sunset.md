@@ -1,6 +1,6 @@
 ---
 title: "Oslo, sunset"
-author: "まなちゃん"
+author: "ティラノ"
 slug: "oslo-sunset"
 image: "/images/paintings/oslo-sunset.png"
 date: "2026-04-12"
