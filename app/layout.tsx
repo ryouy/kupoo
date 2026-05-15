@@ -4,12 +4,12 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Atelier Index",
-    template: "%s | Atelier Index"
+    default: "KUPOO",
+    template: "%s | KUPOO"
   },
-  description: "An online gallery of paintings and photographs.",
+  description: "KUPOOは、会津大学の非公式お絵描きサークルのWebギャラリーです。",
   icons: {
-    icon: "/favi.svg"
+    icon: "/favicon.svg"
   }
 };
 
@@ -19,8 +19,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="font-sans antialiased">
+    <html lang="ja">
+      <body className="doodle-backdrop font-sans antialiased">
         <Header />
         <main>{children}</main>
       </body>

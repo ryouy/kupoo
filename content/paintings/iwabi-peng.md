@@ -1,8 +1,9 @@
 ---
 title: "iwabi-peng"
+author: "まなちゃん"
 slug: "iwabi-peng"
 image: "/images/paintings/iwabi-peng.png"
 date: "2026-05-09"
 materials: "crayon"
 ---
-After watching an anime related with this creature
+この生きものに関係あるアニメを見たあとに描いたやつ。

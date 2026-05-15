@@ -9,19 +9,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        paper: "#151514",
-        ink: "#f2efe7",
-        muted: "#9a9588",
-        line: "#34322e",
-        steel: "#c9c3b5",
-        bone: "#1d1c1a"
+        paper: "#fff8df",
+        ink: "#21180f",
+        muted: "#735f46",
+        line: "#21180f",
+        steel: "#5b4a36",
+        bone: "#fffdf3"
       },
       fontFamily: {
         sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
         serif: ["var(--font-serif)", "Georgia", "serif"]
       },
       boxShadow: {
-        quiet: "0 24px 80px rgba(0, 0, 0, 0.32)"
+        quiet: "8px 8px 0 rgba(33, 24, 15, 0.92)"
       }
     }
   },

@@ -37,16 +37,17 @@ export async function POST(request: Request) {
     try {
       validateAdminPassword(password);
     } catch {
-      return NextResponse.json({ message: "Invalid password." }, { status: 401 });
+      return NextResponse.json({ message: "管理パスワードが違います。" }, { status: 401 });
     }
 
     const kind = field(formData, "kind") as AdminKind;
 
     if (!allowedKinds.has(kind)) {
-      throw new Error("Type must be paintings or photos.");
+      throw new Error("種類は作品のみです。");
     }
 
     const title = field(formData, "title");
+    const author = field(formData, "author");
     const slug = normalizeSlug(field(formData, "slug"));
     const date = field(formData, "date");
     const description = field(formData, "description");
@@ -54,13 +55,13 @@ export async function POST(request: Request) {
     const image = formData.get("image");
 
     if (!(image instanceof File)) {
-      throw new Error("Image is required.");
+      throw new Error("画像を選んでください。");
     }
 
     const extension = allowedImageTypes.get(image.type);
 
     if (!extension) {
-      throw new Error("Image must be JPG, PNG, WebP, or AVIF.");
+      throw new Error("画像はJPG、PNG、WebP、AVIFのいずれかにしてください。");
     }
 
     const branch = getBranch();
@@ -70,6 +71,7 @@ export async function POST(request: Request) {
     const frontmatter = buildMarkdown({
       kind,
       title,
+      author,
       slug,
       image: publicImagePath,
       date,
@@ -94,12 +96,12 @@ export async function POST(request: Request) {
     );
 
     return NextResponse.json({
-      message: "Uploaded to GitHub. Vercel will redeploy from the new commits.",
+      message: "GitHubに投稿しました。新しいコミットからVercelが再デプロイします。",
       url: `/${kind}/${slug}`
     });
   } catch (error) {
     return NextResponse.json(
-      { message: error instanceof Error ? error.message : "Upload failed." },
+      { message: error instanceof Error ? error.message : "投稿に失敗しました。" },
       { status: 400 }
     );
   }

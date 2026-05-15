@@ -1,8 +1,9 @@
 ---
 title: "kamikochi"
+author: "りょーゆ"
 slug: "kamikochi"
 image: "/images/paintings/kamikochi.jpg"
 date: "2025-07-12"
 materials: "crayon"
 ---
-reminds me of cold water
+冷たい水を思い出す。

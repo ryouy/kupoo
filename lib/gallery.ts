@@ -1,8 +1,9 @@
-export type GalleryKind = "paintings" | "photos";
+export type GalleryKind = "paintings";
 
 export type GalleryItem = {
   kind: GalleryKind;
   title: string;
+  author: string;
   slug: string;
   image: string;
   date: string;
@@ -13,7 +14,7 @@ export type GalleryItem = {
 export type GalleryNeighbor = Pick<GalleryItem, "slug" | "title"> | null;
 
 export function formatDate(date: string) {
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("ja-JP", {
     year: "numeric",
     month: "long",
     day: "numeric"

@@ -1,8 +1,9 @@
 ---
 title: "Nördlingen"
+author: "りょーゆ"
 slug: "nordlingen"
 image: "/images/paintings/nordlingen.png"
 date: "2026-04-07"
 materials: "watercolor"
 ---
-Good
+良い。

@@ -1,8 +1,10 @@
 import type { GalleryKind } from "@/lib/gallery";
+import { UNKNOWN_AUTHOR } from "@/lib/authors";
 
 export type AdminWork = {
   kind: GalleryKind;
   title: string;
+  author: string;
   slug: string;
   date: string;
   materials?: string;
@@ -19,6 +21,7 @@ export function WorkEditForm({
   password,
   submitLabel,
   disabled = false,
+  authors = [],
   onCancel,
   onSubmit
 }: {
@@ -26,19 +29,22 @@ export function WorkEditForm({
   password: string;
   submitLabel: string;
   disabled?: boolean;
+  authors?: string[];
   onCancel: () => void;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 }) {
+  const authorOptions = Array.from(new Set([...authors.filter(Boolean), work.author, UNKNOWN_AUTHOR].filter(Boolean)));
+
   return (
     <form key={work.contentPath} onSubmit={onSubmit} className="grid gap-4 border border-line p-4">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-3">
-        <h2 className="text-xl font-medium text-ink">Edit {work.title}</h2>
+        <h2 className="text-xl font-medium text-ink">「{work.title}」を編集</h2>
         <button
           type="button"
           onClick={onCancel}
           className="border border-line px-4 py-2 text-sm text-muted transition hover:border-ink hover:text-ink"
         >
-          Cancel
+          キャンセル
         </button>
       </div>
 
@@ -52,7 +58,7 @@ export function WorkEditForm({
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <label className="grid gap-2 text-sm text-muted">
-          Title
+          作品名
           <input
             name="title"
             defaultValue={work.title}
@@ -61,7 +67,22 @@ export function WorkEditForm({
           />
         </label>
         <label className="grid gap-2 text-sm text-muted">
-          Slug
+          製作者
+          <select
+            name="author"
+            defaultValue={work.author}
+            className="border border-line bg-bone px-3 py-2.5 text-ink"
+            required
+          >
+            {authorOptions.map((author) => (
+              <option key={author} value={author}>
+                {author}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="grid gap-2 text-sm text-muted">
+          URL名
           <input
             name="slug"
             defaultValue={work.slug}
@@ -70,7 +91,7 @@ export function WorkEditForm({
           />
         </label>
         <label className="grid gap-2 text-sm text-muted">
-          Date
+          制作日
           <input
             name="date"
             type="date"
@@ -80,7 +101,7 @@ export function WorkEditForm({
           />
         </label>
         <label className="grid gap-2 text-sm text-muted">
-          Materials
+          画材
           <input
             name="materials"
             defaultValue={work.materials ?? ""}
@@ -88,7 +109,7 @@ export function WorkEditForm({
           />
         </label>
         <label className="grid gap-2 text-sm text-muted sm:col-span-2">
-          Replace image
+          画像を差し替え
           <input
             name="replacementImage"
             type="file"
@@ -99,7 +120,7 @@ export function WorkEditForm({
       </div>
 
       <label className="grid gap-2 text-sm text-muted">
-        Description
+        コメント
         <textarea
           name="description"
           rows={5}

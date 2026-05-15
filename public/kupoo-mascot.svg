@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" role="img" aria-labelledby="title desc">
+  <title id="title">KUPOO mascot</title>
+  <desc id="desc">A hand-drawn KUPOO mascot face with floppy ears and a crown.</desc>
+  <rect width="500" height="500" fill="#fffdf3"/>
+  <g fill="none" stroke="#111" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M168 137c-46 7-80 50-93 102-16 65-5 139 50 179 50 37 139 44 201 17 62-27 93-92 89-157-5-85-75-138-159-143-31-2-61-2-88 2z" stroke-width="8"/>
+    <path d="M94 236c-41 14-57 95-33 132 22 33 62-55 76-112" stroke-width="8"/>
+    <path d="M409 237c43 17 55 100 28 135-22 28-57-58-70-114" stroke-width="8"/>
+    <path d="M166 111c39-3 123-2 177 8" stroke-width="7"/>
+    <path d="M166 111c-4-41 7-78 24-86 23 30 34 58 35 86" stroke-width="7"/>
+    <path d="M226 111c4-48 23-86 45-99 18 33 20 70 13 101" stroke-width="7"/>
+    <path d="M284 113c14-47 43-78 64-84 8 35 1 69-18 96" stroke-width="7"/>
+    <path d="M142 254c19-37 71-36 81-2 11 39-10 86-48 84-37-2-55-42-33-82z" stroke-width="7"/>
+    <path d="M282 254c19-37 71-36 81-2 11 39-10 86-48 84-37-2-55-42-33-82z" stroke-width="7"/>
+    <path d="M168 282c22 0 32 17 27 38M312 282c22 0 32 17 27 38" stroke-width="5"/>
+    <path d="M234 338c17 4 30 4 45 0M247 350c-1 28-24 40-39 15M253 350c6 29 34 36 45 10" stroke-width="7"/>
+    <path d="M225 398c17 24 48 26 67 0" stroke-width="6"/>
+  </g>
+</svg>

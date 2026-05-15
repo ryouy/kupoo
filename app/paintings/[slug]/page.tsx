@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArtworkDetail } from "@/components/ArtworkDetail";
 import { getGalleryItem, getGalleryItems, getNeighbors } from "@/lib/content";
+import { getMembers } from "@/lib/site-data";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -18,7 +19,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const item = getGalleryItem("paintings", slug);
 
   return {
-    title: item?.title ?? "Paintings"
+    title: item?.title ?? "作品集"
   };
 }
 
@@ -31,6 +32,7 @@ export default async function PaintingDetailPage({ params }: PageProps) {
   }
 
   const { previous, next } = getNeighbors("paintings", item.slug);
+  const authors = getMembers().map((member) => member.name);
 
-  return <ArtworkDetail item={item} previous={previous} next={next} />;
+  return <ArtworkDetail item={item} previous={previous} next={next} authors={authors} />;
 }

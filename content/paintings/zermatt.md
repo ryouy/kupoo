@@ -1,8 +1,9 @@
 ---
 title: "Zermatt after 3 days of disaster"
+author: "りょーゆ"
 slug: "zermatt"
 image: "/images/paintings/zermatt.jpg"
 date: "2026-04-08"
 materials: "watercolor"
 ---
-clear view of the Matterhorn
+3日間いろいろあったあと、ようやく見えたマッターホルン。

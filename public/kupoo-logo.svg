@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 500" role="img" aria-labelledby="title desc">
+  <title id="title">KUPOO logo</title>
+  <desc id="desc">A hand-drawn KUPOO mascot face with umbrella and KUPOO lettering.</desc>
+  <rect width="1500" height="500" fill="#fffdf3"/>
+  <g fill="none" stroke="#111" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M240 232c-12-73 46-127 121-139 87-14 169 24 184 111 10 60-9 127-61 166-48 36-128 40-186 17-57-23-92-88-58-155z" stroke-width="8"/>
+    <path d="M245 242c23-47 55-50 58 4 4 55 28-2 45-5 24-4 18 50 41 47 18-2 21-58 54-57 35 1 31 64 58 61 22-3 21-56 54-57 34-1 51 45 49 80" stroke-width="8"/>
+    <path d="M318 64c38-46 194-67 277-18 26 15 43 38 41 66-109-14-219-10-318-48z" stroke-width="7"/>
+    <path d="M365 67c-18 42-21 77-18 112M431 49c-26 62-36 108-38 145M500 45c-18 58-19 103-10 145M567 59c0 49 8 88 25 121" stroke-width="5"/>
+    <path d="M553 20c-26 1-47 13-47 27s24 21 52 16c26-5 43-20 37-32-5-9-20-12-42-11z" stroke-width="6"/>
+    <path d="M367 212c31-48 103-33 110 17 9 63-93 61-112 13" stroke-width="8"/>
+    <path d="M502 213c28-47 92-30 93 17 0 56-82 53-96 15" stroke-width="8"/>
+    <path d="M421 234c-22-13-34-13-42-2M551 235c-20-15-33-14-42 0" stroke-width="7"/>
+    <path d="M358 317c37-27 138-35 179-7 29 19-31 76-91 78-64 1-122-47-88-71z" stroke-width="8"/>
+    <path d="M455 363c-10-30 1-51 34-63" stroke-width="5"/>
+    <path d="M696 249 611 316l86 55" stroke-width="18"/>
+    <path d="M837 188c-20 64-23 130-7 198M954 192c-51 83-93 116-136 125M862 301c38 24 78 56 113 91" stroke-width="17"/>
+    <path d="M1003 285c15-31 52-35 67-9 20 35 3 103-39 105-35 2-50-34-38-71" stroke-width="15"/>
+    <path d="M1091 285c8 42 9 77 4 117M1108 289c22-27 55-25 67 4 16 38-4 84-52 79" stroke-width="15"/>
+    <path d="M1214 286c15-31 52-35 67-9 20 35 3 103-39 105-35 2-50-34-38-71" stroke-width="15"/>
+    <path d="M1342 181c-8 72-11 132-10 178M1328 424h2" stroke-width="20"/>
+  </g>
+</svg>

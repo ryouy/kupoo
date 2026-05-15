@@ -43,7 +43,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ works: await listAdminWorks() });
   } catch (error) {
     return NextResponse.json(
-      { message: error instanceof Error ? error.message : "Could not load works." },
+      { message: error instanceof Error ? error.message : "作品を読み込めませんでした。" },
       { status: error instanceof Error && error.message === "Invalid password." ? 401 : 400 }
     );
   }
@@ -57,11 +57,12 @@ export async function PATCH(request: Request) {
     const kind = text(formData, "kind") as AdminKind;
 
     if (!allowedKinds.has(kind)) {
-      throw new Error("Type must be paintings or photos.");
+      throw new Error("種類は作品のみです。");
     }
 
     const branch = getBranch();
     const title = text(formData, "title");
+    const author = text(formData, "author");
     const slug = normalizeSlug(text(formData, "slug"));
     const date = text(formData, "date");
     const description = text(formData, "description");
@@ -78,7 +79,7 @@ export async function PATCH(request: Request) {
       const extension = allowedImageTypes.get(replacementImage.type);
 
       if (!extension) {
-        throw new Error("Image must be JPG, PNG, WebP, or AVIF.");
+        throw new Error("画像はJPG、PNG、WebP、AVIFのいずれかにしてください。");
       }
 
       const nextImagePath = `public/images/${kind}/${slug}.${extension}`;
@@ -113,6 +114,7 @@ export async function PATCH(request: Request) {
     const markdown = buildMarkdown({
       kind,
       title,
+      author,
       slug,
       image,
       date,
@@ -128,10 +130,10 @@ export async function PATCH(request: Request) {
       branch
     );
 
-    return NextResponse.json({ message: "Updated on GitHub. Vercel will redeploy from the new commit." });
+    return NextResponse.json({ message: "GitHubで更新しました。新しいコミットからVercelが再デプロイします。" });
   } catch (error) {
     return NextResponse.json(
-      { message: error instanceof Error ? error.message : "Could not update work." },
+      { message: error instanceof Error ? error.message : "作品を更新できませんでした。" },
       { status: error instanceof Error && error.message === "Invalid password." ? 401 : 400 }
     );
   }
@@ -151,7 +153,7 @@ export async function DELETE(request: Request) {
     validateAdminPassword(body.password ?? "");
 
     if (!body.contentPath || !body.contentSha) {
-      throw new Error("Content path and SHA are required.");
+      throw new Error("本文ファイルとSHAが必要です。");
     }
 
     const branch = getBranch();
@@ -163,10 +165,10 @@ export async function DELETE(request: Request) {
 
     await deleteGithubFile(body.contentPath, body.contentSha, `Delete work: ${title}`, branch);
 
-    return NextResponse.json({ message: "Deleted from GitHub. Vercel will redeploy from the new commit." });
+    return NextResponse.json({ message: "GitHubから削除しました。新しいコミットからVercelが再デプロイします。" });
   } catch (error) {
     return NextResponse.json(
-      { message: error instanceof Error ? error.message : "Could not delete work." },
+      { message: error instanceof Error ? error.message : "作品を削除できませんでした。" },
       { status: error instanceof Error && error.message === "Invalid password." ? 401 : 400 }
     );
   }

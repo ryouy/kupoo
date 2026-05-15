@@ -1,11 +1,12 @@
 ---
 title: "Quiet Afternoon"
+author: "りょーゆ"
 slug: "quiet-afternoon"
 image: "/images/paintings/quiet-afternoon.png"
 date: "2026-05-01"
 materials: "Oil on canvas"
 ---
 
-A painting built from pale layers and open space, holding the afternoon light left near a window.
+淡い層と余白で、窓辺に残った午後の光を置いておくように描いた作品。
 
-The scene avoids a specific location, leaving room for the viewer's own memory of quiet.
+場所を決めすぎず、見る人の中にある静かな記憶が入り込めるようにしています。

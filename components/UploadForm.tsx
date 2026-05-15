@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { UNKNOWN_AUTHOR } from "@/lib/authors";
 
 type UploadState = "idle" | "submitting" | "success" | "error";
 
@@ -8,10 +9,11 @@ function todayValue() {
   return new Date().toISOString().slice(0, 10);
 }
 
-export function UploadForm() {
+export function UploadForm({ authors = [] }: { authors?: string[] }) {
   const [state, setState] = useState<UploadState>("idle");
   const [message, setMessage] = useState("");
   const [dateKey, setDateKey] = useState(0);
+  const authorOptions = [...authors.filter(Boolean), UNKNOWN_AUTHOR];
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -29,32 +31,30 @@ export function UploadForm() {
       const result = (await response.json()) as { message?: string; url?: string };
 
       if (!response.ok) {
-        throw new Error(result.message ?? "Upload failed.");
+        throw new Error(result.message ?? "投稿に失敗しました。");
       }
 
       setState("success");
-      setMessage(result.message ?? "Uploaded. Vercel will redeploy after GitHub receives the commit.");
+      setMessage(result.message ?? "投稿しました。GitHub反映後にVercelが再デプロイします。");
       form.reset();
       setDateKey((current) => current + 1);
     } catch (error) {
       setState("error");
-      setMessage(error instanceof Error ? error.message : "Upload failed.");
+      setMessage(error instanceof Error ? error.message : "投稿に失敗しました。");
     }
   }
 
   return (
     <form onSubmit={handleSubmit} className="grid gap-5">
       <div className="grid gap-4 border-b border-line pb-5 sm:grid-cols-2">
-        <label className="grid gap-2 text-sm text-muted">
-          Type
-          <select name="kind" className="border border-line bg-bone px-3 py-2.5 text-ink" required>
-            <option value="paintings">Painting</option>
-            <option value="photos">Photo</option>
-          </select>
-        </label>
+        <input type="hidden" name="kind" value="paintings" />
+        <div className="grid gap-2 text-sm font-black text-muted">
+          種類
+          <p className="border-2 border-ink bg-[#ffde59] px-3 py-2.5 text-ink">作品</p>
+        </div>
 
         <label className="grid w-48 gap-1.5 text-xs text-muted">
-          Admin password
+          管理パスワード
           <input
             name="password"
             type="text"
@@ -64,14 +64,29 @@ export function UploadForm() {
         </label>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <label className="grid gap-2 text-sm text-muted">
-          Title
+          作品名
           <input name="title" className="border border-line bg-bone px-3 py-2.5 text-ink" required />
         </label>
 
         <label className="grid gap-2 text-sm text-muted">
-          Slug
+          製作者
+          <select
+            name="author"
+            className="border border-line bg-bone px-3 py-2.5 text-ink"
+            required
+          >
+            {authorOptions.map((author) => (
+              <option key={author} value={author}>
+                {author}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="grid gap-2 text-sm text-muted">
+          URL名
           <input
             name="slug"
             className="border border-line bg-bone px-3 py-2.5 text-ink"
@@ -80,7 +95,7 @@ export function UploadForm() {
         </label>
 
         <label className="grid gap-2 text-sm text-muted">
-          Date
+          制作日
           <input
             key={dateKey}
             name="date"
@@ -92,7 +107,7 @@ export function UploadForm() {
         </label>
 
         <label className="grid gap-2 text-sm text-muted">
-          Materials
+          画材
           <input
             name="materials"
             className="border border-line bg-bone px-3 py-2.5 text-ink"
@@ -101,7 +116,7 @@ export function UploadForm() {
       </div>
 
       <label className="grid gap-2 text-sm text-muted">
-        Image
+        画像
         <input
           name="image"
           type="file"
@@ -112,7 +127,7 @@ export function UploadForm() {
       </label>
 
       <label className="grid gap-2 text-sm text-muted">
-        Description
+        コメント
         <textarea
           name="description"
           rows={5}
@@ -127,7 +142,7 @@ export function UploadForm() {
           disabled={state === "submitting"}
           className="border border-ink bg-ink px-5 py-2.5 text-sm text-bone transition hover:bg-transparent hover:text-ink disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {state === "submitting" ? "Uploading..." : "Upload work"}
+          {state === "submitting" ? "投稿中..." : "作品を投稿"}
         </button>
         {message ? (
           <p className={`text-sm ${state === "error" ? "text-[#f0a7a7]" : "text-muted"}`}>{message}</p>

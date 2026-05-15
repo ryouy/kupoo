@@ -32,6 +32,7 @@ function readItems(kind: GalleryKind): GalleryItem[] {
       return {
         kind,
         title: assertString(data.title, "title", filePath),
+        author: typeof data.author === "string" && data.author ? data.author : "KUPOOメンバー",
         slug: typeof data.slug === "string" && data.slug ? data.slug : fallbackSlug,
         image: assertString(data.image, "image", filePath),
         date: assertString(data.date, "date", filePath),
@@ -51,7 +52,7 @@ export function getGalleryItems(kind: GalleryKind) {
 }
 
 export function getLatestItems(limit = 4) {
-  return [...readItems("paintings"), ...readItems("photos")]
+  return readItems("paintings")
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, limit);
 }

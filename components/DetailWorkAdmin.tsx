@@ -7,7 +7,7 @@ import type { GalleryItem } from "@/lib/gallery";
 type LoadState = "idle" | "loading" | "ready" | "error";
 type SubmitState = "idle" | "submitting" | "success" | "error";
 
-export function DetailWorkAdmin({ item, backHref }: { item: GalleryItem; backHref: string }) {
+export function DetailWorkAdmin({ item, backHref, authors = [] }: { item: GalleryItem; backHref: string; authors?: string[] }) {
   const [open, setOpen] = useState(false);
   const [password, setPassword] = useState("");
   const [works, setWorks] = useState<AdminWork[]>([]);
@@ -31,14 +31,14 @@ export function DetailWorkAdmin({ item, backHref }: { item: GalleryItem; backHre
       const result = (await response.json()) as { works?: AdminWork[]; message?: string };
 
       if (!response.ok) {
-        throw new Error(result.message ?? "Could not load work.");
+        throw new Error(result.message ?? "作品を読み込めませんでした。");
       }
 
       setWorks(result.works ?? []);
       setLoadState("ready");
     } catch (error) {
       setLoadState("error");
-      setMessage(error instanceof Error ? error.message : "Could not load work.");
+      setMessage(error instanceof Error ? error.message : "作品を読み込めませんでした。");
     }
   }
 
@@ -61,16 +61,16 @@ export function DetailWorkAdmin({ item, backHref }: { item: GalleryItem; backHre
       const result = (await response.json()) as { message?: string };
 
       if (!response.ok) {
-        throw new Error(result.message ?? "Could not update work.");
+        throw new Error(result.message ?? "作品を更新できませんでした。");
       }
 
       setSubmitState("success");
-      setMessage(result.message ?? "Updated.");
+      setMessage(result.message ?? "更新しました。");
       setEditing(false);
       await loadWork();
     } catch (error) {
       setSubmitState("error");
-      setMessage(error instanceof Error ? error.message : "Could not update work.");
+      setMessage(error instanceof Error ? error.message : "作品を更新できませんでした。");
     }
   }
 
@@ -79,7 +79,7 @@ export function DetailWorkAdmin({ item, backHref }: { item: GalleryItem; backHre
       return;
     }
 
-    const confirmed = window.confirm(`Delete "${work.title}"? This will remove the Markdown and image.`);
+    const confirmed = window.confirm(`「${work.title}」を削除しますか？Markdownと画像も削除されます。`);
 
     if (!confirmed) {
       return;
@@ -106,15 +106,15 @@ export function DetailWorkAdmin({ item, backHref }: { item: GalleryItem; backHre
       const result = (await response.json()) as { message?: string };
 
       if (!response.ok) {
-        throw new Error(result.message ?? "Could not delete work.");
+        throw new Error(result.message ?? "作品を削除できませんでした。");
       }
 
       setSubmitState("success");
-      setMessage(result.message ?? "Deleted.");
+      setMessage(result.message ?? "削除しました。");
       window.location.assign(backHref);
     } catch (error) {
       setSubmitState("error");
-      setMessage(error instanceof Error ? error.message : "Could not delete work.");
+      setMessage(error instanceof Error ? error.message : "作品を削除できませんでした。");
     }
   }
 
@@ -130,14 +130,14 @@ export function DetailWorkAdmin({ item, backHref }: { item: GalleryItem; backHre
           open ? "border-ink bg-ink text-bone" : "border-line text-muted hover:border-ink hover:text-ink"
         }`}
       >
-        Manage
+        管理
       </button>
 
       {open ? (
         <div className="mt-4 grid gap-4">
           <div className="flex flex-wrap items-end gap-3">
             <label className="grid w-48 gap-1.5 text-xs text-muted">
-              Admin password
+              管理パスワード
               <input
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
@@ -151,7 +151,7 @@ export function DetailWorkAdmin({ item, backHref }: { item: GalleryItem; backHre
               disabled={loadState === "loading"}
               className="border border-line px-3 py-1.5 text-xs text-muted transition hover:border-ink hover:text-ink disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {loadState === "loading" ? "Loading..." : "Load"}
+              {loadState === "loading" ? "読み込み中..." : "読み込む"}
             </button>
           </div>
 
@@ -163,7 +163,7 @@ export function DetailWorkAdmin({ item, backHref }: { item: GalleryItem; backHre
                 disabled={submitState === "submitting"}
                 className="border border-line px-3 py-1.5 text-xs text-muted transition hover:border-ink hover:text-ink disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Edit
+                編集
               </button>
               <button
                 type="button"
@@ -171,21 +171,22 @@ export function DetailWorkAdmin({ item, backHref }: { item: GalleryItem; backHre
                 disabled={submitState === "submitting"}
                 className="border border-[#f0a7a7] px-3 py-1.5 text-xs text-[#f0a7a7] transition hover:bg-[#f0a7a7] hover:text-paper disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {submitState === "submitting" ? "Deleting..." : "Delete"}
+                {submitState === "submitting" ? "削除中..." : "削除"}
               </button>
             </div>
           ) : null}
 
           {loadState === "ready" && !work ? (
-            <p className="text-sm text-[#f0a7a7]">Could not find this work in admin data.</p>
+            <p className="text-sm text-[#f0a7a7]">管理データ内でこの作品を見つけられませんでした。</p>
           ) : null}
 
           {editing && work ? (
             <WorkEditForm
               work={work}
               password={password}
-              submitLabel={submitState === "submitting" ? "Saving..." : "Save changes"}
+              submitLabel={submitState === "submitting" ? "保存中..." : "変更を保存"}
               disabled={submitState === "submitting"}
+              authors={authors}
               onCancel={() => setEditing(false)}
               onSubmit={handleEdit}
             />

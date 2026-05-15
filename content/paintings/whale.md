@@ -1,8 +1,9 @@
 ---
 title: "whale"
+author: "まなちゃん"
 slug: "whale"
 image: "/images/paintings/whale.png"
 date: "2026-04-28"
 materials: "crayon, canvas"
 ---
-unreal
+現実じゃない感じ。

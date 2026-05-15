@@ -6,8 +6,8 @@ export function GalleryCard({ item }: { item: GalleryItem }) {
 
   return (
     <Link href={href} className="group block">
-      <article className="border-b border-line pb-4 transition duration-300 hover:border-ink">
-        <div className="aspect-[4/5] overflow-hidden bg-paper sm:aspect-[5/6]">
+      <article className="border-4 border-ink bg-bone p-3 shadow-quiet transition duration-300 hover:-translate-y-1 hover:rotate-[-1deg]">
+        <div className="aspect-[4/5] overflow-hidden border-2 border-ink bg-paper sm:aspect-[5/6]">
           <img
             src={item.image}
             alt={item.title}
@@ -16,14 +16,15 @@ export function GalleryCard({ item }: { item: GalleryItem }) {
         </div>
         <div className="space-y-2 pt-4">
           <div className="flex items-start justify-between gap-4">
-            <h2 className="text-base font-medium leading-7 text-ink">
+            <h2 className="text-base font-black leading-7 text-ink">
               {item.title}
             </h2>
-            <span className="shrink-0 pt-1 text-xs text-muted">
-              {item.kind === "paintings" ? "Painting" : "Photo"}
+            <span className="shrink-0 border-2 border-ink bg-[#ffde59] px-2 py-1 text-xs font-black text-ink">
+              作品
             </span>
           </div>
-          <p className="text-sm leading-6 text-muted">{formatDate(item.date)}</p>
+          <p className="text-sm font-black leading-6 text-ink">作者: {item.author}</p>
+          <p className="text-sm font-bold leading-6 text-muted">{formatDate(item.date)}</p>
         </div>
       </article>
     </Link>

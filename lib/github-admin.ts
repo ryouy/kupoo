@@ -1,10 +1,12 @@
 import matter from "gray-matter";
+import { fallbackMembers, fallbackSiteContent, type Member, type SiteContent } from "@/lib/site-data";
 
-export type AdminKind = "paintings" | "photos";
+export type AdminKind = "paintings";
 
 export type AdminWork = {
   kind: AdminKind;
   title: string;
+  author: string;
   slug: string;
   date: string;
   materials?: string;
@@ -16,7 +18,7 @@ export type AdminWork = {
   imageSha?: string;
 };
 
-export const allowedKinds = new Set<AdminKind>(["paintings", "photos"]);
+export const allowedKinds = new Set<AdminKind>(["paintings"]);
 
 export const allowedImageTypes = new Map([
   ["image/jpeg", "jpg"],
@@ -80,6 +82,7 @@ export function toBase64(buffer: ArrayBuffer) {
 export function buildMarkdown({
   kind,
   title,
+  author,
   slug,
   image,
   date,
@@ -88,6 +91,7 @@ export function buildMarkdown({
 }: {
   kind: AdminKind;
   title: string;
+  author: string;
   slug: string;
   image: string;
   date: string;
@@ -97,6 +101,7 @@ export function buildMarkdown({
   return [
     "---",
     `title: "${escapeFrontmatter(title)}"`,
+    `author: "${escapeFrontmatter(author)}"`,
     `slug: "${slug}"`,
     `image: "${image}"`,
     `date: "${escapeFrontmatter(date)}"`,
@@ -236,6 +241,7 @@ export async function listAdminWorks() {
       works.push({
         kind,
         title: typeof parsed.data.title === "string" ? parsed.data.title : slug,
+        author: typeof parsed.data.author === "string" ? parsed.data.author : "KUPOOメンバー",
         slug,
         date: typeof parsed.data.date === "string" ? parsed.data.date : "",
         materials: typeof parsed.data.materials === "string" ? parsed.data.materials : undefined,
@@ -250,4 +256,33 @@ export async function listAdminWorks() {
   }
 
   return works.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+}
+
+function decodeGithubFile(file: GithubContentItem | GithubContentItem[] | null) {
+  if (!file || Array.isArray(file) || !file.content) {
+    return null;
+  }
+
+  return {
+    sha: file.sha,
+    source: Buffer.from(file.content.replace(/\n/g, ""), "base64").toString("utf8")
+  };
+}
+
+export async function getAdminSiteData() {
+  const siteFile = await getGithubContent("content/site.json");
+  const membersFile = await getGithubContent("content/members.json");
+  const siteSource = decodeGithubFile(siteFile);
+  const membersSource = decodeGithubFile(membersFile);
+
+  return {
+    site: {
+      data: siteSource ? (JSON.parse(siteSource.source) as SiteContent) : fallbackSiteContent,
+      sha: siteSource?.sha ?? ""
+    },
+    members: {
+      data: membersSource ? (JSON.parse(membersSource.source) as Member[]) : fallbackMembers,
+      sha: membersSource?.sha ?? ""
+    }
+  };
 }

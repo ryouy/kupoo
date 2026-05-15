@@ -4,7 +4,7 @@
 
 :root {
   color-scheme: light;
-  --font-sans: Inter, "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+  --font-sans: "Arial Rounded MT Bold", "Hiragino Maru Gothic ProN", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, Inter, Arial, sans-serif;
   --font-serif: "Times New Roman", "Yu Mincho", "Hiragino Mincho ProN", serif;
 }
 
@@ -20,17 +20,14 @@ body {
   position: relative;
   isolation: isolate;
   min-height: 100vh;
+  overflow-x: hidden;
   background:
-    radial-gradient(ellipse at 12% 18%, rgba(0, 209, 255, 0.42), transparent 48%),
-    radial-gradient(ellipse at 88% 16%, rgba(255, 74, 168, 0.36), transparent 46%),
-    radial-gradient(ellipse at 52% 92%, rgba(73, 255, 154, 0.28), transparent 50%),
-    radial-gradient(ellipse at 74% 72%, rgba(255, 183, 74, 0.22), transparent 45%),
-    linear-gradient(135deg, rgba(105, 82, 255, 0.34), rgba(21, 21, 20, 0.22) 58%),
-    #151514;
+    linear-gradient(90deg, rgba(33, 24, 15, 0.08) 1px, transparent 1px),
+    linear-gradient(rgba(33, 24, 15, 0.08) 1px, transparent 1px),
+    linear-gradient(135deg, rgba(255, 94, 143, 0.18), rgba(255, 219, 77, 0.34) 34%, rgba(87, 212, 196, 0.2) 68%, rgba(255, 248, 223, 1));
+  background-size: 34px 34px, 34px 34px, auto;
   background-attachment: fixed;
-  background-size: 170% 170%, 165% 165%, 175% 175%, 160% 160%, 190% 190%, auto;
-  color: #f2efe7;
-  animation: galleryGradient 120s ease-in-out infinite alternate;
+  color: #21180f;
 }
 
 body > * {
@@ -39,30 +36,31 @@ body > * {
 }
 
 ::selection {
-  background: #f2efe7;
-  color: #151514;
+  background: #21180f;
+  color: #fff8df;
 }
 
 .prose-gallery p + p {
   margin-top: 1rem;
 }
 
-@keyframes galleryGradient {
-  0% {
-    background-position: 0% 18%, 100% 10%, 18% 100%, 88% 74%, 0% 50%, 0 0;
-  }
-
-  50% {
-    background-position: 34% 30%, 64% 44%, 58% 56%, 44% 40%, 52% 50%, 0 0;
-  }
-
-  100% {
-    background-position: 78% 54%, 12% 72%, 44% 12%, 24% 18%, 100% 50%, 0 0;
-  }
+.doodle-backdrop::before {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  content: "";
+  opacity: 0.34;
+  background-image:
+    url("data:image/svg+xml,%3Csvg width='160' height='160' viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2321180f' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M23 28c15-12 32-5 27 10-4 13-29 7-22-8 8-17 36-15 48 3'/%3E%3Cpath d='M108 23l18 10-15 12-16-10z' fill='%23ffde59'/%3E%3Cpath d='M35 116l18-19 16 17-18 17z' fill='%2357d4c4'/%3E%3Cpath d='M104 102c9 6 18 6 26 0M112 88h1M128 88h1'/%3E%3Cpath d='M78 73l15-8 7 15-15 8z' fill='%23ff5e8f'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 220px 220px;
+  background-position: 16px 88px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body {
-    animation: none;
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
   }
 }

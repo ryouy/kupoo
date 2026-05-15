@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { GalleryCard } from "@/components/GalleryCard";
 import { SortToggle, type SortMode } from "@/components/SortToggle";
 import { WorkEditForm, type AdminWork } from "@/components/WorkEditForm";
+import { UNKNOWN_AUTHOR } from "@/lib/authors";
 import type { GalleryItem, GalleryKind } from "@/lib/gallery";
 
 type LoadState = "idle" | "loading" | "ready" | "error";
@@ -20,8 +21,9 @@ function shuffleItems(items: GalleryItem[]) {
   return next;
 }
 
-export function GalleryGrid({ items, kind }: { items: GalleryItem[]; kind: GalleryKind }) {
+export function GalleryGrid({ items, kind, authors = [] }: { items: GalleryItem[]; kind: GalleryKind; authors?: string[] }) {
   const [mode, setMode] = useState<SortMode>("published");
+  const [authorFilter, setAuthorFilter] = useState("all");
   const [seed, setSeed] = useState(0);
   const [manageOpen, setManageOpen] = useState(false);
   const [password, setPassword] = useState("");
@@ -31,13 +33,20 @@ export function GalleryGrid({ items, kind }: { items: GalleryItem[]; kind: Galle
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [message, setMessage] = useState("");
 
+  const authorOptions = useMemo(
+    () => Array.from(new Set([...authors, ...items.map((item) => item.author), UNKNOWN_AUTHOR].filter(Boolean))),
+    [authors, items]
+  );
+
   const visibleItems = useMemo(() => {
+    const filteredItems = authorFilter === "all" ? items : items.filter((item) => item.author === authorFilter);
+
     if (mode === "published") {
-      return items;
+      return filteredItems;
     }
 
-    return shuffleItems(items);
-  }, [items, mode, seed]);
+    return shuffleItems(filteredItems);
+  }, [items, mode, seed, authorFilter]);
 
   function handleChange(nextMode: SortMode) {
     setMode(nextMode);
@@ -56,14 +65,14 @@ export function GalleryGrid({ items, kind }: { items: GalleryItem[]; kind: Galle
       const result = (await response.json()) as { works?: AdminWork[]; message?: string };
 
       if (!response.ok) {
-        throw new Error(result.message ?? "Could not load works.");
+        throw new Error(result.message ?? "作品を読み込めませんでした。");
       }
 
       setAdminWorks((result.works ?? []).filter((work) => work.kind === kind));
       setLoadState("ready");
     } catch (error) {
       setLoadState("error");
-      setMessage(error instanceof Error ? error.message : "Could not load works.");
+      setMessage(error instanceof Error ? error.message : "作品を読み込めませんでした。");
     }
   }
 
@@ -90,21 +99,21 @@ export function GalleryGrid({ items, kind }: { items: GalleryItem[]; kind: Galle
       const result = (await response.json()) as { message?: string };
 
       if (!response.ok) {
-        throw new Error(result.message ?? "Could not update work.");
+        throw new Error(result.message ?? "作品を更新できませんでした。");
       }
 
       setSubmitState("success");
-      setMessage(result.message ?? "Updated.");
+      setMessage(result.message ?? "更新しました。");
       setEditingWork(null);
       await loadWorks();
     } catch (error) {
       setSubmitState("error");
-      setMessage(error instanceof Error ? error.message : "Could not update work.");
+      setMessage(error instanceof Error ? error.message : "作品を更新できませんでした。");
     }
   }
 
   async function handleDelete(work: AdminWork) {
-    const confirmed = window.confirm(`Delete "${work.title}"? This will remove the Markdown and image.`);
+    const confirmed = window.confirm(`「${work.title}」を削除しますか？Markdownと画像も削除されます。`);
 
     if (!confirmed) {
       return;
@@ -131,24 +140,39 @@ export function GalleryGrid({ items, kind }: { items: GalleryItem[]; kind: Galle
       const result = (await response.json()) as { message?: string };
 
       if (!response.ok) {
-        throw new Error(result.message ?? "Could not delete work.");
+        throw new Error(result.message ?? "作品を削除できませんでした。");
       }
 
       setSubmitState("success");
-      setMessage(result.message ?? "Deleted.");
+      setMessage(result.message ?? "削除しました。");
       setEditingWork(null);
       await loadWorks();
     } catch (error) {
       setSubmitState("error");
-      setMessage(error instanceof Error ? error.message : "Could not delete work.");
+      setMessage(error instanceof Error ? error.message : "作品を削除できませんでした。");
     }
   }
 
   return (
     <section className="space-y-8">
-      <div className="flex flex-col gap-4 border-b border-line pb-5 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-muted">{items.length} works</p>
+      <div className="flex flex-col gap-4 border-b-4 border-ink pb-5 sm:flex-row sm:items-center sm:justify-between">
+        <p className="w-fit border-2 border-ink bg-[#ffde59] px-3 py-1 text-sm font-black text-ink">{visibleItems.length} / {items.length}作品</p>
         <div className="flex flex-wrap items-center gap-3">
+          <label className="flex items-center gap-2 text-sm font-black text-muted">
+            製作者
+            <select
+              value={authorFilter}
+              onChange={(event) => setAuthorFilter(event.target.value)}
+              className="border-2 border-ink bg-bone px-3 py-2 text-sm font-black text-ink shadow-[3px_3px_0_#21180f]"
+            >
+              <option value="all">全員</option>
+              {authorOptions.map((author) => (
+                <option key={author} value={author}>
+                  {author}
+                </option>
+              ))}
+            </select>
+          </label>
           <SortToggle value={mode} onChange={handleChange} />
           <button
             type="button"
@@ -156,36 +180,36 @@ export function GalleryGrid({ items, kind }: { items: GalleryItem[]; kind: Galle
               setManageOpen((current) => !current);
               setMessage("");
             }}
-            className={`border px-4 py-2 text-sm transition ${
+            className={`border-2 px-4 py-2 text-sm font-black transition ${
               manageOpen
                 ? "border-ink bg-ink text-bone"
-                : "border-line text-muted hover:border-ink hover:text-ink"
+                : "border-ink bg-bone text-muted hover:bg-[#57d4c4] hover:text-ink"
             }`}
           >
-            Manage
+            管理
           </button>
         </div>
       </div>
 
       {manageOpen ? (
-        <div className="grid gap-4 border-b border-line pb-6">
+        <div className="grid gap-4 border-b-4 border-ink bg-bone/80 p-4 pb-6">
           <div className="flex flex-wrap items-end gap-3">
             <label className="grid w-48 gap-1.5 text-xs text-muted">
-              Admin password
+              管理パスワード
               <input
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 type="text"
-                className="border border-line bg-bone px-2.5 py-1.5 text-sm text-ink"
+                className="border-2 border-ink bg-bone px-2.5 py-1.5 text-sm text-ink"
               />
             </label>
             <button
               type="button"
               onClick={loadWorks}
               disabled={loadState === "loading"}
-              className="border border-line px-3 py-1.5 text-xs text-muted transition hover:border-ink hover:text-ink disabled:cursor-not-allowed disabled:opacity-60"
+              className="border-2 border-ink bg-[#ffde59] px-3 py-1.5 text-xs font-black text-ink transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {loadState === "loading" ? "Loading..." : "Load"}
+              {loadState === "loading" ? "読み込み中..." : "読み込む"}
             </button>
           </div>
 
@@ -193,8 +217,9 @@ export function GalleryGrid({ items, kind }: { items: GalleryItem[]; kind: Galle
             <WorkEditForm
               work={editingWork}
               password={password}
-              submitLabel={submitState === "submitting" ? "Saving..." : "Save changes"}
+              submitLabel={submitState === "submitting" ? "保存中..." : "変更を保存"}
               disabled={submitState === "submitting"}
+              authors={authors}
               onCancel={() => setEditingWork(null)}
               onSubmit={handleEdit}
             />
@@ -221,17 +246,17 @@ export function GalleryGrid({ items, kind }: { items: GalleryItem[]; kind: Galle
                     type="button"
                     onClick={() => adminWork && setEditingWork(adminWork)}
                     disabled={!adminWork || submitState === "submitting"}
-                    className="flex-1 border border-line px-3 py-2 text-sm text-muted transition hover:border-ink hover:text-ink disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex-1 border-2 border-ink bg-bone px-3 py-2 text-sm font-black text-muted transition hover:bg-[#57d4c4] hover:text-ink disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    Edit
+                    編集
                   </button>
                   <button
                     type="button"
                     onClick={() => adminWork && handleDelete(adminWork)}
                     disabled={!adminWork || submitState === "submitting"}
-                    className="flex-1 border border-[#f0a7a7] px-3 py-2 text-sm text-[#f0a7a7] transition hover:bg-[#f0a7a7] hover:text-paper disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex-1 border-2 border-[#d92755] bg-bone px-3 py-2 text-sm font-black text-[#d92755] transition hover:bg-[#d92755] hover:text-bone disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    Delete
+                    削除
                   </button>
                 </div>
               ) : null}
