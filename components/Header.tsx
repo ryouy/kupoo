@@ -1,10 +1,10 @@
 import Link from "next/link";
 
 const navItems = [
-  { href: "/paintings", label: "作品集" },
-  { href: "/about", label: "KUPOOとは" },
-  { href: "/members", label: "メンバー" },
-  { href: "/contact", label: "連絡先" }
+  { href: "/paintings", label: "作品集", tilt: "rotate-[-1deg]", hover: "hover:bg-[#57d4c4]" },
+  { href: "/about", label: "KUPOOとは", tilt: "rotate-[1deg]", hover: "hover:bg-[#ffde59]" },
+  { href: "/members", label: "メンバー", tilt: "rotate-[-2deg]", hover: "hover:bg-[#ff5e8f]" },
+  { href: "/contact", label: "連絡先", tilt: "rotate-[2deg]", hover: "hover:bg-[#b8ff6a]" }
 ];
 
 export function Header() {
@@ -19,27 +19,19 @@ export function Header() {
           <img src="/favicon.svg" alt="" className="h-8 w-8" />
           KUPOO
         </Link>
-        <nav className="flex flex-wrap items-center gap-1 text-sm font-bold text-muted">
+        <nav className="flex flex-wrap items-center gap-2 text-sm font-black text-ink">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="rounded-full px-2 py-2 transition-colors hover:bg-[#57d4c4] hover:text-ink sm:px-3"
+              className={`border-2 border-ink bg-bone px-3 py-2 shadow-[3px_3px_0_#21180f] transition hover:-translate-y-0.5 hover:rotate-0 ${item.tilt} ${item.hover}`}
             >
               {item.label}
             </Link>
           ))}
-          <Link href="/admin" className="px-1.5 py-2 text-xs text-muted/70 transition-colors hover:text-ink sm:px-2">
+          <Link href="/admin" className="rotate-[-1deg] border-2 border-ink bg-bone px-3 py-2 text-xs text-muted shadow-[3px_3px_0_#21180f] transition hover:-translate-y-0.5 hover:rotate-0 hover:bg-[#d7c8ff] hover:text-ink">
             管理
           </Link>
-          <a
-            href="https://ryouyplayground.vercel.app/"
-            target="_blank"
-            rel="noreferrer"
-            className="ml-1 border-2 border-ink bg-bone px-3 py-2 text-ink shadow-[3px_3px_0_#21180f] transition hover:-translate-y-0.5 sm:ml-2 sm:px-4"
-          >
-            プロフィール
-          </a>
         </nav>
       </div>
     </header>
