@@ -1,43 +1,59 @@
-# KUPOO Web Gallery
+# KUPOO
 
-KUPOO is a playful web gallery for the unofficial drawing circle at the University of Aizu.
-It is built with Next.js App Router and keeps the public site fast by reading local content files instead of calling the GitHub API on every page view.
+会津大学の非公式お絵描きサークル「KUPOO」のWebギャラリーです。
 
-## What It Does
+作品の投稿・閲覧、KUPOO紹介、メンバー一覧、連絡先ページがあります。
 
-- Shows KUPOO artworks in a noisy, bright, drawing-circle style gallery.
-- Supports artwork detail pages with title, author, date, materials, image, and description.
-- Filters the artwork list by author.
-- Includes KUPOO intro, contact, and member pages.
-- Uses the KUPOO favicon/logo assets in `public/`.
-- Lets admins update artworks, site text, and members through GitHub API commits.
+## 使っているもの
 
-## Content Structure
+- Next.js
+- React
+- Tailwind CSS
+- GitHub API
 
-- `content/paintings/*.md`: artwork metadata and descriptions.
-- `content/site.json`: text used on the home, about, contact, and member pages.
-- `content/members.json`: member list and member icon paths.
-- `public/images/paintings/`: uploaded artwork images.
-- `public/favicon.svg`, `public/kupoo-logo.svg`, `public/kupoo-mascot.svg`: KUPOO visual assets.
+## 起動
 
-Normal site pages read these local files. GitHub API access is only used from admin actions such as loading/saving editable content or uploading works.
+```sh
+npm install
+npm run dev
+```
 
-## Admin
+ローカルでは以下で見られます。
 
-The admin page is available at:
+```txt
+http://localhost:3000
+```
+
+## ビルド
+
+```sh
+npm run build
+```
+
+## コンテンツ
+
+- 作品: `content/paintings/*.md`
+- サイト内テキスト: `content/site.json`
+- メンバー: `content/members.json`
+- 作品画像: `public/images/paintings/`
+- KUPOOロゴなど: `public/`
+
+通常ページはローカルのJSONやMarkdownを読みます。
+GitHub APIを使うのは管理画面で保存するときだけです。
+
+## 管理画面
 
 ```txt
 /admin
 ```
 
-Admin features:
+管理画面でできること:
 
-- Add, edit, and delete artworks.
-- Select artwork authors from the member list, with `製作者不明` as a fallback option.
-- Edit site text stored in `content/site.json`.
-- Add, edit, and delete members stored in `content/members.json`.
+- 作品の追加・編集・削除
+- サイト内テキストの編集
+- メンバーの追加・編集・削除
 
-Required environment variables:
+必要な環境変数:
 
 ```txt
 ADMIN_PASSWORD=
@@ -47,42 +63,12 @@ GITHUB_TOKEN=
 GITHUB_BRANCH=main
 ```
 
-Admin edits commit directly to GitHub. Vercel redeploys from those new commits.
+## push
 
-## Development
-
-Install dependencies:
-
-```sh
-npm install
-```
-
-Run locally:
-
-```sh
-npm run dev
-```
-
-Build:
-
-```sh
-npm run build
-```
-
-## Pushing local changes
-
-Admin edits can add commits to `content/**` and `public/images/**` directly on GitHub. To push local code changes without manually fixing those remote-managed files every time, use:
-
-```sh
-npm run sync:push
-```
-
-The script fetches `origin/main`, rebases local commits, accepts the GitHub version for conflicts under `content/` and `public/images/`, then pushes.
-
-Typical flow:
+管理画面からGitHub上のコンテンツが更新されている場合は、衝突回避用にこちらを使います。
 
 ```sh
 git add .
-git commit -m "Update KUPOO site"
+git commit -m "Update site design"
 npm run sync:push
 ```
