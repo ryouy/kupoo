@@ -340,7 +340,7 @@ export function AdminPanel({ authors = [] }: { authors?: string[] }) {
               disabled={!site || siteSubmitState === "submitting"}
               className="border border-ink bg-[#ffde59] px-5 py-2.5 text-sm font-black text-ink transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {siteSubmitState === "submitting" ? "保存中..." : "GitHubへ保存"}
+              {siteSubmitState === "submitting" ? "保存中..." : "保存"}
             </button>
           </div>
 
