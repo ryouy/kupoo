@@ -1,9 +1,9 @@
 ---
-title: "月光夜"
-author: "ティラノ1"
-slug: "moonlight"
-image: "/images/paintings/moonlight.jpg"
-date: "2026-04-05"
-materials: "水彩画"
+title: "白馬の"
+author: "てんとう虫"
+slug: "oide"
+image: "/images/paintings/oide.jpg"
+date: "2025-11-02"
+materials: "クレヨン"
 ---
-ゆらゆら　月と水
+どっしり
