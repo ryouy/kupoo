@@ -2,7 +2,7 @@
 title: "太平洋の海"
 author: "製作者不明"
 slug: "umi"
-image: "/images/paintings/umi.jpg"
+image: "/images/paintings/umi.png"
 date: "2026-05-15"
 materials: "水彩"
 ---
