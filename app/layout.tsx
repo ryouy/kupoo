@@ -4,10 +4,10 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "KUPOO",
-    template: "%s | KUPOO"
+    default: "Kupoo",
+    template: "%s | Kupoo"
   },
-  description: "KUPOOは、会津大学の非公式お絵描きサークルのWebギャラリーです。",
+  description: "Kupooは、会津大学の非公式お絵描きサークルのWebギャラリーです。",
   icons: {
     icon: "/favicon.svg"
   }

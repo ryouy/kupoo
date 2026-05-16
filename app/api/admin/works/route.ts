@@ -130,7 +130,7 @@ export async function PATCH(request: Request) {
       branch
     );
 
-    return NextResponse.json({ message: "GitHubで更新しました。新しいコミットからVercelが再デプロイします。" });
+    return NextResponse.json({ message: "保存しました。新しいコミットからVercelが再デプロイします。" });
   } catch (error) {
     return NextResponse.json(
       { message: error instanceof Error ? error.message : "作品を更新できませんでした。" },

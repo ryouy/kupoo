@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" role="img" aria-labelledby="title desc">
-  <title id="title">KUPOO mascot</title>
-  <desc id="desc">A hand-drawn KUPOO mascot face with floppy ears and a crown.</desc>
+  <title id="title">Kupoo mascot</title>
+  <desc id="desc">A hand-drawn Kupoo mascot face with floppy ears and a crown.</desc>
   <rect width="500" height="500" fill="#fffdf3"/>
   <g fill="none" stroke="#111" stroke-linecap="round" stroke-linejoin="round">
     <path d="M168 137c-46 7-80 50-93 102-16 65-5 139 50 179 50 37 139 44 201 17 62-27 93-92 89-157-5-85-75-138-159-143-31-2-61-2-88 2z" stroke-width="8"/>

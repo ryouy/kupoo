@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getSiteContent } from "@/lib/site-data";
 
 export const metadata: Metadata = {
-  title: "KUPOOとは"
+  title: "Kupooとは"
 };
 
 export default function AboutPage() {

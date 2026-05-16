@@ -18,6 +18,14 @@ export type AdminWork = {
   imageSha?: string;
 };
 
+export type AdminHistoryItem = {
+  sha: string;
+  message: string;
+  date: string;
+  author: string;
+  url: string;
+};
+
 export const allowedKinds = new Set<AdminKind>(["paintings"]);
 
 export const allowedImageTypes = new Map([
@@ -241,7 +249,7 @@ export async function listAdminWorks() {
       works.push({
         kind,
         title: typeof parsed.data.title === "string" ? parsed.data.title : slug,
-        author: typeof parsed.data.author === "string" ? parsed.data.author : "KUPOOメンバー",
+        author: typeof parsed.data.author === "string" ? parsed.data.author : "Kupooメンバー",
         slug,
         date: typeof parsed.data.date === "string" ? parsed.data.date : "",
         materials: typeof parsed.data.materials === "string" ? parsed.data.materials : undefined,
@@ -256,6 +264,45 @@ export async function listAdminWorks() {
   }
 
   return works.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+}
+
+export async function listAdminHistory() {
+  const branch = getBranch();
+  const response = await githubRequest(
+    `/commits?sha=${encodeURIComponent(branch)}&path=content&per_page=50`
+  );
+
+  if (!response.ok) {
+    const details = (await response.json().catch(() => null)) as { message?: string } | null;
+    throw new Error(details?.message ?? "編集履歴を読み込めませんでした。");
+  }
+
+  const commits = (await response.json()) as Array<{
+    sha: string;
+    html_url: string;
+    commit: {
+      message: string;
+      author?: {
+        name?: string;
+        date?: string;
+      };
+      committer?: {
+        name?: string;
+        date?: string;
+      };
+    };
+    author?: {
+      login?: string;
+    } | null;
+  }>;
+
+  return commits.map((commit) => ({
+    sha: commit.sha,
+    message: commit.commit.message.split("\n")[0] || "(no message)",
+    date: commit.commit.author?.date ?? commit.commit.committer?.date ?? "",
+    author: commit.author?.login ?? commit.commit.author?.name ?? commit.commit.committer?.name ?? "unknown",
+    url: commit.html_url
+  }));
 }
 
 function decodeGithubFile(file: GithubContentItem | GithubContentItem[] | null) {

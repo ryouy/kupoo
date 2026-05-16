@@ -63,18 +63,18 @@ function readJson<T>(fileName: string, fallback: T): T {
 export const fallbackSiteContent: SiteContent = {
   home: {
     eyebrow: "会津大学 非公式お絵描きサークル",
-    title: "KUPOO",
+    title: "Kupoo",
     tagline: "未来のバンクシーがここから生まれる",
     description: "アトリエきやれでもぐもぐしながら、気ままに絵を描く人たちのWebギャラリーです。作品、ノリ、活動記録、たぶん全部ちょっとにぎやか。",
     primaryCta: "作品を見る",
-    secondaryCta: "KUPOOとは",
+    secondaryCta: "Kupooとは",
     latestEyebrow: "できたて / たぶん自信作",
     latestTitle: "新着作品"
   },
   about: {
-    eyebrow: "KUPOO紹介ページ",
+    eyebrow: "Kupoo紹介ページ",
     headline: "未来のバンクシーがここから生まれる",
-    body: "KUPOOは、会津大学の非公式お絵描きサークルです。アトリエきやれでもぐもぐしながら、気ままに絵を描いています。メンバーは絵がとっても上手です。",
+    body: "Kupooは、会津大学の非公式お絵描きサークルです。アトリエきやれでもぐもぐしながら、気ままに絵を描いています。メンバーは絵がとっても上手です。",
     vibeTitle: "だいたいこんな感じ",
     vibeBody: "うまい人も、これから描く人も、今日は線がヘロヘロの日の人も、同じ机でわちゃわちゃ描く場所です。おやつを食べて、絵を見せ合って、たまに謎の名言が生まれます。",
     jokeLabel: "小ネタ",
@@ -89,14 +89,14 @@ export const fallbackSiteContent: SiteContent = {
   },
   contact: {
     eyebrow: "連絡先",
-    headline: "KUPOOに声をかける",
+    headline: "Kupooに声をかける",
     body: "見学したい、参加したい、なんか楽しそうなので話を聞きたい。そんな感じで気軽にどうぞ。お絵描き欲がある日はだいたい歓迎ムードです。",
     xHandle: "@Kupoo129",
     xUrl: "https://x.com/Kupoo129"
   },
   members: {
     eyebrow: "メンバーリスト",
-    headline: "KUPOOの人たち",
+    headline: "Kupooの人たち",
     body: "まだ仮の状態です。あとから名前、SNS、担当、アイコンなどを増やしていけます。"
   }
 };

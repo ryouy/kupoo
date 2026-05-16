@@ -97,7 +97,7 @@ export async function PATCH(request: Request) {
       await createGithubFile("content/members.json", membersContent, "Create members", branch);
     }
 
-    return NextResponse.json({ message: "サイト情報をGitHubで更新しました。Vercelが再デプロイします。" });
+    return NextResponse.json({ message: "保存しました。新しいコミットからVercelが再デプロイします。" });
   } catch (error) {
     return NextResponse.json(
       { message: error instanceof Error ? error.message : "サイト情報を更新できませんでした。" },

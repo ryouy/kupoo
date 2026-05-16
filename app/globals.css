@@ -28,6 +28,7 @@ body {
   background-size: 34px 34px, 34px 34px, auto;
   background-attachment: fixed;
   color: #21180f;
+  animation: kupoo-background-flow 42s linear infinite;
 }
 
 body > * {
@@ -57,6 +58,7 @@ body > * {
     url("data:image/svg+xml,%3Csvg width='300' height='300' viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2321180f' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M226 30 72 184l-17 51 51-17L260 64z' fill='%23ffde59'/%3E%3Cpath d='M214 43 247 76M72 184l34 34M55 235l23-7'/%3E%3Cpath d='M51 81c30-26 56-13 46 12-8 19-46 11-37-11 9-23 48-28 71 1'/%3E%3Cpath d='M167 226c23-7 49-7 77 0M176 247c13 7 28 8 45 1'/%3E%3Cpath d='M218 138l21-9 10 21-21 10z' fill='%23ff5e8f'/%3E%3Cpath d='M44 269h1M265 177h1M137 39h1'/%3E%3C/g%3E%3C/svg%3E");
   background-size: 260px 260px, 340px 340px, 300px 300px;
   background-position: 16px 88px, 152px 24px, 40px 210px;
+  animation: kupoo-doodle-drift 80s linear infinite;
 }
 
 .doodle-backdrop::after {
@@ -70,12 +72,45 @@ body > * {
     url("data:image/svg+xml,%3Csvg width='420' height='420' viewBox='0 0 420 420' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2321180f' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M57 316c58-34 119-35 183-4 35 17 70 16 105-3'/%3E%3Cpath d='M72 99c29-24 64-28 103-12'/%3E%3Cpath d='M303 58l28 58-62-14 44-37' fill='%23ffde59'/%3E%3Cpath d='M95 161c15-11 35-10 51 2M88 186c18 11 37 12 57 1'/%3E%3Cpath d='M250 192c20-45 78-42 92-2 13 40-24 80-72 64-31-10-37-38-20-62z' fill='%23fffdf3'/%3E%3Cpath d='M292 211h1M316 200h1M292 238h1'/%3E%3C/g%3E%3C/svg%3E");
   background-size: 420px 420px;
   background-position: right 76px top 128px;
+  animation: kupoo-doodle-float 110s linear infinite;
+}
+
+@keyframes kupoo-background-flow {
+  from {
+    background-position: 0 0, 0 0, 0 0;
+  }
+
+  to {
+    background-position: 34px 18px, -18px 34px, 180px 120px;
+  }
+}
+
+@keyframes kupoo-doodle-drift {
+  from {
+    background-position: 16px 88px, 152px 24px, 40px 210px;
+  }
+
+  to {
+    background-position: 276px 348px, -188px 364px, 340px -90px;
+  }
+}
+
+@keyframes kupoo-doodle-float {
+  from {
+    background-position: right 76px top 128px;
+  }
+
+  to {
+    background-position: right 496px top -292px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
   }
 }

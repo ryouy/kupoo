@@ -32,7 +32,7 @@ function readItems(kind: GalleryKind): GalleryItem[] {
       return {
         kind,
         title: assertString(data.title, "title", filePath),
-        author: typeof data.author === "string" && data.author ? data.author : "KUPOOメンバー",
+        author: typeof data.author === "string" && data.author ? data.author : "Kupooメンバー",
         slug: typeof data.slug === "string" && data.slug ? data.slug : fallbackSlug,
         image: assertString(data.image, "image", filePath),
         date: assertString(data.date, "date", filePath),

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const navItems = [
   { href: "/paintings", label: "作品集", tilt: "rotate-[-1deg]", hover: "hover:bg-[#57d4c4]" },
-  { href: "/about", label: "KUPOOとは", tilt: "rotate-[1deg]", hover: "hover:bg-[#ffde59]" },
+  { href: "/about", label: "Kupooとは", tilt: "rotate-[1deg]", hover: "hover:bg-[#ffde59]" },
   { href: "/members", label: "メンバー", tilt: "rotate-[-2deg]", hover: "hover:bg-[#ff5e8f]" },
   { href: "/contact", label: "連絡先", tilt: "rotate-[2deg]", hover: "hover:bg-[#b8ff6a]" }
 ];
@@ -14,10 +14,10 @@ export function Header() {
         <Link
           href="/"
           className="flex rotate-[-2deg] items-center gap-2 border-4 border-ink bg-[#ffde59] px-3 py-1 text-lg font-black tracking-normal text-ink shadow-quiet transition hover:rotate-0"
-          aria-label="KUPOO ホーム"
+          aria-label="Kupoo ホーム"
         >
           <img src="/favicon.svg" alt="" className="h-8 w-8" />
-          KUPOO
+          Kupoo
         </Link>
         <nav className="flex flex-wrap items-center gap-2 text-sm font-black text-ink">
           {navItems.map((item) => (

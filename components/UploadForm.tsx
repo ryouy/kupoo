@@ -35,7 +35,7 @@ export function UploadForm({ authors = [] }: { authors?: string[] }) {
       }
 
       setState("success");
-      setMessage(result.message ?? "投稿しました。GitHub反映後にVercelが再デプロイします。");
+      setMessage(result.message ?? "投稿しました。新しいコミットからVercelが再デプロイします。");
       form.reset();
       setDateKey((current) => current + 1);
     } catch (error) {
@@ -46,12 +46,8 @@ export function UploadForm({ authors = [] }: { authors?: string[] }) {
 
   return (
     <form onSubmit={handleSubmit} className="grid gap-5">
-      <div className="grid gap-4 border-b border-line pb-5 sm:grid-cols-2">
+      <div className="grid gap-4 border-b border-line pb-5">
         <input type="hidden" name="kind" value="paintings" />
-        <div className="grid gap-2 text-sm font-black text-muted">
-          種類
-          <p className="border-2 border-ink bg-[#ffde59] px-3 py-2.5 text-ink">作品</p>
-        </div>
 
         <label className="grid w-48 gap-1.5 text-xs text-muted">
           管理パスワード

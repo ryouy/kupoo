@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { UploadForm } from "@/components/UploadForm";
 import { UNKNOWN_AUTHOR } from "@/lib/authors";
 import type { Member, SiteContent } from "@/lib/site-data";
@@ -125,7 +126,7 @@ export function AdminPanel({ authors = [] }: { authors?: string[] }) {
       }
 
       setSubmitState("success");
-      setMessage(result.message ?? "更新しました。");
+      setMessage(result.message ?? "保存しました。新しいコミットからVercelが再デプロイします。");
       await loadWorks();
     } catch (error) {
       setSubmitState("error");
@@ -237,7 +238,7 @@ export function AdminPanel({ authors = [] }: { authors?: string[] }) {
       }
 
       setSiteSubmitState("success");
-      setSiteMessage(result.message ?? "更新しました。");
+      setSiteMessage(result.message ?? "保存しました。新しいコミットからVercelが再デプロイします。");
       await loadSiteData();
     } catch (error) {
       setSiteSubmitState("error");
@@ -312,6 +313,12 @@ export function AdminPanel({ authors = [] }: { authors?: string[] }) {
             {item.label}
           </button>
         ))}
+        <Link
+          href="/admin/history"
+          className="border-2 border-ink bg-bone px-4 py-2 text-sm font-black text-muted transition hover:bg-[#57d4c4] hover:text-ink"
+        >
+          編集履歴
+        </Link>
       </div>
 
       {section === "site" || section === "members" ? (
@@ -395,9 +402,10 @@ export function AdminPanel({ authors = [] }: { authors?: string[] }) {
           ) : null}
 
           {siteMessage ? (
-            <p className={`text-sm ${siteState === "error" || siteSubmitState === "error" ? "text-[#d92755]" : "text-muted"}`}>
-              {siteMessage}
-            </p>
+            <StatusMessage
+              message={siteMessage}
+              tone={siteState === "error" || siteSubmitState === "error" ? "error" : "success"}
+            />
           ) : null}
         </section>
       ) : null}
@@ -587,15 +595,31 @@ export function AdminPanel({ authors = [] }: { authors?: string[] }) {
           ) : null}
 
           {message ? (
-            <p className={`text-sm ${loadState === "error" || submitState === "error" ? "text-[#f0a7a7]" : "text-muted"}`}>
-              {message}
-            </p>
+            <StatusMessage
+              message={message}
+              tone={loadState === "error" || submitState === "error" ? "error" : "success"}
+            />
           ) : null}
         </section>
       ) : null}
       </>
       ) : null}
     </div>
+  );
+}
+
+function StatusMessage({ message, tone }: { message: string; tone: "success" | "error" }) {
+  return (
+    <p
+      role={tone === "success" ? "status" : "alert"}
+      className={`border-2 px-4 py-3 text-sm font-black shadow-[3px_3px_0_#21180f] ${
+        tone === "error"
+          ? "border-[#d92755] bg-bone text-[#d92755]"
+          : "border-ink bg-[#ffde59] text-ink"
+      }`}
+    >
+      {message}
+    </p>
   );
 }
 
@@ -629,7 +653,7 @@ function SiteTextEditor({
       </section>
 
       <section className="grid gap-4 border-t border-line pt-6">
-        <h2 className="text-2xl font-black text-ink">KUPOOとは</h2>
+        <h2 className="text-2xl font-black text-ink">Kupooとは</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <TextInput label="ラベル" value={site.about.eyebrow} onChange={(value) => setSiteField("about", "eyebrow", value)} />
           <TextInput label="見出し" value={site.about.headline} onChange={(value) => setSiteField("about", "headline", value)} />

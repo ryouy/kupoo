@@ -1,8 +1,8 @@
-# KUPOO
+# Kupoo
 
-会津大学の非公式お絵描きサークル「KUPOO」のWebギャラリーです。
+会津大学の非公式お絵描きサークル「Kupoo」のWebギャラリーです。
 
-作品の投稿・閲覧、KUPOO紹介、メンバー一覧、連絡先ページがあります。
+作品の投稿・閲覧、Kupoo紹介、メンバー一覧、連絡先ページがあります。
 
 ## 使っているもの
 
@@ -36,7 +36,7 @@ npm run build
 - サイト内テキスト: `content/site.json`
 - メンバー: `content/members.json`
 - 作品画像: `public/images/paintings/`
-- KUPOOロゴなど: `public/`
+- Kupooロゴなど: `public/`
 
 通常ページはローカルのJSONやMarkdownを読みます。
 GitHub APIを使うのは管理画面で保存するときだけです。

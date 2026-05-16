@@ -65,7 +65,7 @@ export function DetailWorkAdmin({ item, backHref, authors = [] }: { item: Galler
       }
 
       setSubmitState("success");
-      setMessage(result.message ?? "更新しました。");
+      setMessage(result.message ?? "保存しました。新しいコミットからVercelが再デプロイします。");
       setEditing(false);
       await loadWork();
     } catch (error) {
@@ -193,7 +193,14 @@ export function DetailWorkAdmin({ item, backHref, authors = [] }: { item: Galler
           ) : null}
 
           {message ? (
-            <p className={`text-sm ${loadState === "error" || submitState === "error" ? "text-[#f0a7a7]" : "text-muted"}`}>
+            <p
+              role={loadState === "error" || submitState === "error" ? "alert" : "status"}
+              className={`border-2 px-4 py-3 text-sm font-black shadow-[3px_3px_0_#21180f] ${
+                loadState === "error" || submitState === "error"
+                  ? "border-[#d92755] bg-bone text-[#d92755]"
+                  : "border-ink bg-[#ffde59] text-ink"
+              }`}
+            >
               {message}
             </p>
           ) : null}

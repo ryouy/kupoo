@@ -43,7 +43,7 @@ export default function Home() {
           <div className="group relative col-span-2 overflow-hidden border-4 border-ink bg-bone shadow-quiet">
             <img
               src="/kupoo-logo.svg"
-              alt="KUPOO公式ロゴ"
+              alt="Kupoo公式ロゴ"
               className="h-full min-h-48 w-full object-cover"
             />
           </div>
