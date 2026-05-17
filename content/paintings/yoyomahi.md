@@ -1,6 +1,6 @@
 ---
 title: "ヨヨマヒ"
-author: "製作者不明"
+author: "しなちく"
 slug: "yoyomahi"
 image: "/images/paintings/yoyomahi.jpg"
 date: "2026-05-17"
