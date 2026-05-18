@@ -9,7 +9,7 @@ function todayValue() {
   return new Date().toISOString().slice(0, 10);
 }
 
-export function UploadForm({ authors = [] }: { authors?: string[] }) {
+export function UploadForm({ authors = [], password }: { authors?: string[]; password: string }) {
   const [state, setState] = useState<UploadState>("idle");
   const [message, setMessage] = useState("");
   const [dateKey, setDateKey] = useState(0);
@@ -17,6 +17,13 @@ export function UploadForm({ authors = [] }: { authors?: string[] }) {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!password.trim()) {
+      setState("error");
+      setMessage("管理パスワードを入力してください。");
+      return;
+    }
+
     setState("submitting");
     setMessage("");
 
@@ -48,16 +55,7 @@ export function UploadForm({ authors = [] }: { authors?: string[] }) {
     <form onSubmit={handleSubmit} className="grid gap-5">
       <div className="grid gap-4 border-b border-line pb-5">
         <input type="hidden" name="kind" value="paintings" />
-
-        <label className="grid w-48 gap-1.5 text-xs text-muted">
-          管理パスワード
-          <input
-            name="password"
-            type="text"
-            className="border border-line bg-bone px-2.5 py-1.5 text-sm text-ink"
-            required
-          />
-        </label>
+        <input type="hidden" name="password" value={password} />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">

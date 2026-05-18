@@ -38,8 +38,8 @@ const tabs: Array<{ id: Tab; label: string }> = [
 const sections: Array<{ id: Section; label: string }> = [
   { id: "works", label: "作品集" },
   { id: "posts", label: "お知らせ" },
-  { id: "site", label: "サイト文言" },
-  { id: "members", label: "メンバー" }
+  { id: "members", label: "メンバー" },
+  { id: "site", label: "サイト文言" }
 ];
 
 const emptyMember: Member = {
@@ -86,6 +86,12 @@ export function AdminPanel({
   );
 
   async function loadWorks() {
+    if (!password.trim()) {
+      setLoadState("error");
+      setMessage("管理パスワードを入力してください。");
+      return;
+    }
+
     setLoadState("loading");
     setMessage("");
 
@@ -114,6 +120,12 @@ export function AdminPanel({
 
   async function handleEdit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!password.trim()) {
+      setSubmitState("error");
+      setMessage("管理パスワードを入力してください。");
+      return;
+    }
 
     if (!selectedWork) {
       setMessage("先に作品を選んでください。");
@@ -145,6 +157,12 @@ export function AdminPanel({
   }
 
   async function handleDelete() {
+    if (!password.trim()) {
+      setSubmitState("error");
+      setMessage("管理パスワードを入力してください。");
+      return;
+    }
+
     if (!selectedWork) {
       setMessage("先に作品を選んでください。");
       return;
@@ -191,6 +209,12 @@ export function AdminPanel({
   }
 
   async function loadSiteData() {
+    if (!password.trim()) {
+      setSiteState("error");
+      setSiteMessage("管理パスワードを入力してください。");
+      return;
+    }
+
     setSiteState("loading");
     setSiteSubmitState("idle");
     setSiteMessage("");
@@ -220,6 +244,12 @@ export function AdminPanel({
   }
 
   async function saveSiteData() {
+    if (!password.trim()) {
+      setSiteSubmitState("error");
+      setSiteMessage("管理パスワードを入力してください。");
+      return;
+    }
+
     if (!site) {
       setSiteMessage("先にサイト情報を読み込んでください。");
       return;
@@ -267,6 +297,12 @@ export function AdminPanel({
   }
 
   async function uploadMemberImage(index: number, image: File | null) {
+    if (!password.trim()) {
+      setSiteSubmitState("error");
+      setSiteMessage("管理パスワードを入力してください。");
+      return;
+    }
+
     if (!image) {
       setSiteMessage("アイコン画像を選んでください。");
       return;
@@ -467,9 +503,6 @@ export function AdminPanel({
 
       {section === "posts" ? (
         <section className="grid gap-5">
-          <div className="border-b border-line pb-4">
-            <h2 className="text-2xl font-black text-ink">お知らせを管理する</h2>
-          </div>
           <PostUploadForm password={password} />
         </section>
       ) : null}
@@ -496,12 +529,11 @@ export function AdminPanel({
         ))}
       </div>
 
-      {tab === "add" ? <UploadForm authors={authors} /> : null}
+      {tab === "add" ? <UploadForm authors={authors} password={password} /> : null}
 
       {tab !== "add" ? (
         <section className="grid gap-4">
-          <div className="grid gap-4 border-b border-line pb-4 sm:grid-cols-[1fr_auto] sm:items-end">
-            <div />
+          <div className="flex justify-end border-b border-line pb-4">
             <button
               type="button"
               onClick={loadWorks}

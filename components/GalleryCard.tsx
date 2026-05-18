@@ -15,14 +15,9 @@ export function GalleryCard({ item }: { item: GalleryItem }) {
           />
         </div>
         <div className="space-y-2 pt-4">
-          <div className="flex items-start justify-between gap-4">
-            <h2 className="text-base font-black leading-7 text-ink">
-              {item.title}
-            </h2>
-            <span className="shrink-0 border-2 border-ink bg-[#ffde59] px-2 py-1 text-xs font-black text-ink">
-              作品
-            </span>
-          </div>
+          <h2 className="text-base font-black leading-7 text-ink">
+            {item.title}
+          </h2>
           <p className="text-sm font-black leading-6 text-ink">作者: {item.author}</p>
           <p className="text-sm font-bold leading-6 text-muted">{formatDate(item.date)}</p>
         </div>

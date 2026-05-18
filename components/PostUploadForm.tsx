@@ -53,6 +53,12 @@ export function PostUploadForm({ password }: { password: string }) {
   );
 
   async function loadWorks() {
+    if (!password.trim()) {
+      setWorkLoadState("error");
+      setMessage("管理パスワードを入力してください。");
+      return;
+    }
+
     setWorkLoadState("loading");
     setMessage("");
 
@@ -73,6 +79,12 @@ export function PostUploadForm({ password }: { password: string }) {
   }
 
   async function loadPosts() {
+    if (!password.trim()) {
+      setPostLoadState("error");
+      setMessage("管理パスワードを入力してください。");
+      return;
+    }
+
     setPostLoadState("loading");
     setMessage("");
 
@@ -98,6 +110,13 @@ export function PostUploadForm({ password }: { password: string }) {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!password.trim()) {
+      setState("error");
+      setMessage("管理パスワードを入力してください。");
+      return;
+    }
+
     setState("submitting");
     setMessage("");
 
@@ -129,6 +148,13 @@ export function PostUploadForm({ password }: { password: string }) {
 
   async function handleEdit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!password.trim()) {
+      setEditState("error");
+      setMessage("管理パスワードを入力してください。");
+      return;
+    }
+
     setEditState("submitting");
     setMessage("");
 
@@ -153,6 +179,12 @@ export function PostUploadForm({ password }: { password: string }) {
   }
 
   async function handleDelete() {
+    if (!password.trim()) {
+      setEditState("error");
+      setMessage("管理パスワードを入力してください。");
+      return;
+    }
+
     if (!selectedPost) {
       setMessage("先に投稿を選んでください。");
       return;
@@ -197,7 +229,7 @@ export function PostUploadForm({ password }: { password: string }) {
   }
 
   return (
-    <div className="grid gap-8">
+    <div className="grid gap-5">
     <div className="flex flex-wrap gap-2 border-b border-line pb-3">
       {postTabs.map((item) => (
         <button
@@ -304,7 +336,7 @@ export function PostUploadForm({ password }: { password: string }) {
     ) : null}
 
     {postTab !== "add" ? (
-    <section className="grid gap-4 border-t-4 border-ink pt-6">
+    <section className="grid gap-4">
       <div className="flex flex-wrap items-end gap-3">
         <button
           type="button"

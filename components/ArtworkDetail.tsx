@@ -50,9 +50,6 @@ export function DetailFrame({
 
       <div className="mx-auto grid max-w-5xl gap-8 py-10 sm:py-12 lg:grid-cols-[0.78fr_1fr]">
         <div>
-        <p className="mb-3 w-fit border-2 border-ink bg-[#ffde59] px-3 py-1 text-sm font-black text-ink">
-          作品
-        </p>
         <h1 className="text-4xl font-black leading-tight tracking-normal text-ink sm:text-6xl">
           {item.title}
         </h1>

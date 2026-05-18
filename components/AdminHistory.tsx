@@ -23,13 +23,18 @@ function formatDate(value: string) {
   }).format(new Date(value));
 }
 
-export function AdminHistory() {
-  const [password, setPassword] = useState("");
+export function AdminHistory({ password }: { password: string }) {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [state, setState] = useState<LoadState>("idle");
   const [message, setMessage] = useState("");
 
   async function loadHistory() {
+    if (!password.trim()) {
+      setState("error");
+      setMessage("管理パスワードを入力してください。");
+      return;
+    }
+
     setState("loading");
     setMessage("");
 
@@ -52,16 +57,7 @@ export function AdminHistory() {
 
   return (
     <section className="grid gap-5">
-      <div className="grid gap-4 border-b border-line pb-4 sm:grid-cols-[1fr_auto] sm:items-end">
-        <label className="grid w-48 gap-1.5 text-xs text-muted">
-          管理パスワード
-          <input
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            type="text"
-            className="border border-line bg-bone px-2.5 py-1.5 text-sm text-ink"
-          />
-        </label>
+      <div className="flex justify-end border-b border-line pb-4">
         <button
           type="button"
           onClick={loadHistory}

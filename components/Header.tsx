@@ -1,11 +1,11 @@
 import Link from "next/link";
 
 const navItems = [
-  { href: "/paintings", label: "作品集", tilt: "rotate-[-1deg]", hover: "hover:bg-[#57d4c4]" },
-  { href: "/news", label: "お知らせ", tilt: "rotate-[-1deg]", hover: "hover:bg-[#ffde59]" },
-  { href: "/about", label: "Kupooとは", tilt: "rotate-[1deg]", hover: "hover:bg-[#ffde59]" },
-  { href: "/members", label: "メンバー", tilt: "rotate-[-2deg]", hover: "hover:bg-[#ff5e8f]" },
-  { href: "/contact", label: "連絡先", tilt: "rotate-[2deg]", hover: "hover:bg-[#b8ff6a]" }
+  { href: "/about", label: "Kupooとは", tilt: "rotate-[1deg]", bg: "bg-[#ffde59]", hover: "hover:bg-[#ffd22e]" },
+  { href: "/paintings", label: "作品集", tilt: "rotate-[-1deg]", bg: "bg-[#57d4c4]", hover: "hover:bg-[#35c7b4]" },
+  { href: "/news", label: "お知らせ", tilt: "rotate-[-1deg]", bg: "bg-[#b8ff6a]", hover: "hover:bg-[#9df33d]" },
+  { href: "/members", label: "メンバー", tilt: "rotate-[-2deg]", bg: "bg-[#ff8fbc]", hover: "hover:bg-[#ff5e8f]" },
+  { href: "/contact", label: "連絡先", tilt: "rotate-[2deg]", bg: "bg-[#d7c8ff]", hover: "hover:bg-[#c5adff]" }
 ];
 
 export function Header() {
@@ -25,12 +25,12 @@ export function Header() {
             <Link
               key={item.href}
               href={item.href}
-              className={`border-2 border-ink bg-bone px-3 py-2 shadow-[3px_3px_0_#21180f] transition hover:-translate-y-0.5 hover:rotate-0 ${item.tilt} ${item.hover}`}
+              className={`border-2 border-ink px-3 py-2 shadow-[3px_3px_0_#21180f] transition hover:-translate-y-1 hover:rotate-0 hover:shadow-[5px_5px_0_#21180f] ${item.tilt} ${item.bg} ${item.hover}`}
             >
               {item.label}
             </Link>
           ))}
-          <Link href="/admin" className="rotate-[-1deg] border-2 border-ink bg-bone px-3 py-2 text-xs text-muted shadow-[3px_3px_0_#21180f] transition hover:-translate-y-0.5 hover:rotate-0 hover:bg-[#d7c8ff] hover:text-ink">
+          <Link href="/admin" className="rotate-[-1deg] border-2 border-ink bg-bone px-3 py-2 text-xs text-muted shadow-[3px_3px_0_#21180f] transition hover:-translate-y-1 hover:rotate-0 hover:bg-[#d7c8ff] hover:text-ink hover:shadow-[5px_5px_0_#21180f]">
             管理
           </Link>
         </nav>
