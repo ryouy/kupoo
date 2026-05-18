@@ -3,7 +3,9 @@ title: "お絵描き会"
 slug: "oekaki0517"
 date: "2026-05-17"
 images:
-  - "/images/activities/oekaki0517-1.jpg"
+  - "/images/paintings/puripuri-chimera-dog.png"
+  - "/images/paintings/sochan.png"
+  - "/images/paintings/yoyomahi.jpg"
 ---
 
 メンバー3人でお絵描き会を開催しました。
