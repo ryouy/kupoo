@@ -1,6 +1,6 @@
 ---
 title: "砂丘"
-author: "製作者不明"
+author: "だいおう"
 slug: "sakyu"
 image: "/images/paintings/sakyu.jpg"
 date: "2026-05-15"
