@@ -1,6 +1,6 @@
 ---
 title: "whale"
-author: "ティラノ"
+author: "しなちく"
 slug: "whale"
 image: "/images/paintings/whale.png"
 date: "2026-04-28"
