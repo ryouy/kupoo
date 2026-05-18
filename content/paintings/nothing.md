@@ -1,6 +1,6 @@
 ---
 title: "無邪気"
-author: "ティラノ1"
+author: "しなちく"
 slug: "eve"
 image: "/images/paintings/nothing.png"
 date: "2026-05-10"
