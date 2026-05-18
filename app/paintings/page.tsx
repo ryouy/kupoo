@@ -12,16 +12,16 @@ export default function PaintingsPage() {
   const authors = getMembers().map((member) => member.name);
 
   return (
-    <div className="mx-auto max-w-7xl px-5 py-12 sm:px-8 sm:py-16">
-      <header className="mb-10 grid gap-6 border-b-4 border-ink pb-8 lg:grid-cols-[0.7fr_1fr]">
+    <div className="mx-auto max-w-7xl px-5 py-8 sm:px-8 sm:py-10">
+      <header className="mb-7 grid items-center gap-4 border-b-4 border-ink pb-5 lg:grid-cols-2">
         <p className="w-fit rotate-[-1deg] border-4 border-ink bg-[#57d4c4] px-3 py-2 text-sm font-black text-ink shadow-quiet">Archive / 01</p>
-        <div>
-        <h1 className="text-5xl font-black leading-none tracking-normal text-ink sm:text-7xl">
-          作品集
-        </h1>
-        <p className="mt-4 max-w-2xl text-base font-bold leading-8 text-muted">
-          Kupooメンバーの絵がずらっと並ぶ場所。公開順でもランダムでも、気分でどうぞ。
-        </p>
+        <div className="lg:text-center">
+          <h1 className="text-4xl font-black leading-none tracking-normal text-ink sm:text-6xl">
+            作品集
+          </h1>
+          <p className="mt-3 text-base font-bold leading-7 text-muted">
+            Kupooメンバーの絵がずらっと並ぶ場所。公開順でもランダムでも、気分でどうぞ。
+          </p>
         </div>
       </header>
       <GalleryGrid items={items} kind="paintings" authors={authors} />

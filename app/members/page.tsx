@@ -10,15 +10,15 @@ export default function MembersPage() {
   const members = getMembers();
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8 sm:py-16">
-      <header className="mb-10 border-b-4 border-ink pb-8">
-        <p className="mb-5 inline-block rotate-[-2deg] border-4 border-ink bg-[#ff5e8f] px-4 py-2 text-sm font-black text-ink shadow-quiet">
+    <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-10">
+      <header className="mb-7 border-b-4 border-ink pb-5">
+        <p className="mb-4 inline-block rotate-[-2deg] border-4 border-ink bg-[#ff5e8f] px-4 py-2 text-sm font-black text-ink shadow-quiet">
           {site.members.eyebrow}
         </p>
-        <h1 className="text-5xl font-black leading-none text-ink sm:text-7xl">
+        <h1 className="text-4xl font-black leading-none text-ink sm:text-6xl">
           {site.members.headline}
         </h1>
-        <p className="mt-5 max-w-2xl text-base font-bold leading-8 text-muted">
+        <p className="mt-3 max-w-2xl text-base font-bold leading-7 text-muted">
           {site.members.body}
         </p>
       </header>

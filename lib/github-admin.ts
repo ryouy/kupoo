@@ -2,6 +2,7 @@ import matter from "gray-matter";
 import { fallbackMembers, fallbackSiteContent, type Member, type SiteContent } from "@/lib/site-data";
 
 export type AdminKind = "paintings";
+export type AdminPostKind = "activities" | "news";
 
 export type AdminWork = {
   kind: AdminKind;
@@ -27,6 +28,7 @@ export type AdminHistoryItem = {
 };
 
 export const allowedKinds = new Set<AdminKind>(["paintings"]);
+export const allowedPostKinds = new Set<AdminPostKind>(["activities", "news"]);
 
 export const allowedImageTypes = new Map([
   ["image/jpeg", "jpg"],
@@ -121,6 +123,33 @@ export function buildMarkdown({
   ]
     .filter((line) => line !== "")
     .join("\n");
+}
+
+export function buildPostMarkdown({
+  title,
+  slug,
+  images,
+  date,
+  description
+}: {
+  title: string;
+  slug: string;
+  images: string[];
+  date: string;
+  description: string;
+}) {
+  return [
+    "---",
+    `title: "${escapeFrontmatter(title)}"`,
+    `slug: "${slug}"`,
+    `date: "${escapeFrontmatter(date)}"`,
+    "images:",
+    ...images.map((image) => `  - "${image}"`),
+    "---",
+    "",
+    description,
+    ""
+  ].join("\n");
 }
 
 export async function githubRequest(path: string, init: RequestInit = {}) {

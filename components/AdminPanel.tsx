@@ -2,11 +2,12 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { PostUploadForm } from "@/components/PostUploadForm";
 import { UploadForm } from "@/components/UploadForm";
 import { UNKNOWN_AUTHOR } from "@/lib/authors";
 import type { Member, SiteContent } from "@/lib/site-data";
 
-type Section = "works" | "site" | "members";
+type Section = "works" | "posts" | "site" | "members";
 type Tab = "add" | "edit" | "delete";
 type Kind = "paintings";
 
@@ -36,6 +37,7 @@ const tabs: Array<{ id: Tab; label: string }> = [
 
 const sections: Array<{ id: Section; label: string }> = [
   { id: "works", label: "作品集" },
+  { id: "posts", label: "活動記録・お知らせ" },
   { id: "site", label: "サイト文言" },
   { id: "members", label: "メンバー" }
 ];
@@ -254,6 +256,47 @@ export function AdminPanel({ authors = [] }: { authors?: string[] }) {
     );
   }
 
+  async function uploadMemberImage(index: number, image: File | null) {
+    if (!image) {
+      setSiteMessage("アイコン画像を選んでください。");
+      return;
+    }
+
+    const member = members[index];
+
+    if (!member) {
+      setSiteMessage("メンバーを見つけられませんでした。");
+      return;
+    }
+
+    setSiteSubmitState("submitting");
+    setSiteMessage("");
+
+    try {
+      const formData = new FormData();
+      formData.append("password", password);
+      formData.append("name", member.name || `member-${index + 1}`);
+      formData.append("image", image);
+
+      const response = await fetch("/api/admin/member-image", {
+        method: "POST",
+        body: formData
+      });
+      const result = (await response.json()) as { image?: string; message?: string };
+
+      if (!response.ok || !result.image) {
+        throw new Error(result.message ?? "画像を保存できませんでした。");
+      }
+
+      updateMember(index, "image", result.image);
+      setSiteSubmitState("success");
+      setSiteMessage(result.message ?? "画像をGitHubに保存しました。最後にメンバー情報を保存してください。");
+    } catch (error) {
+      setSiteSubmitState("error");
+      setSiteMessage(error instanceof Error ? error.message : "画像を保存できませんでした。");
+    }
+  }
+
   function updateFact(index: number, field: "label" | "value", value: string) {
     setSite((current) => {
       if (!current) {
@@ -381,6 +424,16 @@ export function AdminPanel({ authors = [] }: { authors?: string[] }) {
                       アイコン画像URL
                       <input value={member.image} onChange={(event) => updateMember(index, "image", event.target.value)} className="border border-line bg-bone px-3 py-2.5 text-ink" />
                     </label>
+                    <label className="grid gap-2 text-sm text-muted">
+                      アイコン画像をアップロード
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/avif"
+                        onChange={(event) => uploadMemberImage(index, event.target.files?.[0] ?? null)}
+                        disabled={siteSubmitState === "submitting"}
+                        className="border border-line bg-bone px-3 py-2.5 text-ink file:mr-4 file:border-0 file:bg-ink file:px-4 file:py-2 file:text-bone disabled:cursor-not-allowed disabled:opacity-60"
+                      />
+                    </label>
                   </div>
                   <button
                     type="button"
@@ -407,6 +460,15 @@ export function AdminPanel({ authors = [] }: { authors?: string[] }) {
               tone={siteState === "error" || siteSubmitState === "error" ? "error" : "success"}
             />
           ) : null}
+        </section>
+      ) : null}
+
+      {section === "posts" ? (
+        <section className="grid gap-5">
+          <div className="border-b border-line pb-4">
+            <h2 className="text-2xl font-black text-ink">活動記録・お知らせを追加</h2>
+          </div>
+          <PostUploadForm />
         </section>
       ) : null}
 
