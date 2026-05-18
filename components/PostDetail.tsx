@@ -32,13 +32,11 @@ export function PostDetail({
       </header>
 
       {item.images.length > 0 ? (
-        <div className="mb-8 grid gap-4 sm:grid-cols-2">
+        <div className="mx-auto mb-8 grid max-w-5xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {item.images.map((image, index) => {
             const work = workByImage.get(image);
-            const className = `overflow-hidden border-4 border-ink bg-bone p-2 shadow-quiet ${
-              index === 0 ? "sm:col-span-2" : ""
-            }`;
-            const imageElement = <img src={image} alt={work?.title ?? ""} className="max-h-[72vh] w-full object-contain" />;
+            const className = "overflow-hidden border-4 border-ink bg-bone p-2 shadow-quiet";
+            const imageElement = <img src={image} alt={work?.title ?? ""} className="aspect-[4/3] w-full object-cover" />;
 
             return (
               <figure key={`${image}-${index}`} className={className}>
