@@ -1,6 +1,6 @@
 ---
 title: "みなさん"
-author: "てんとう虫"
+author: "だいおう"
 slug: "everyone"
 image: "/images/paintings/everyone.jpg"
 date: "2026-05-15"
