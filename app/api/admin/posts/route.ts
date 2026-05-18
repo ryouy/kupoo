@@ -4,6 +4,7 @@ import {
   allowedPostKinds,
   buildPostMarkdown,
   createGithubFile,
+  deleteGithubFile,
   ensurePathDoesNotExist,
   getBranch,
   listAdminPosts,
@@ -218,6 +219,37 @@ export async function PATCH(request: Request) {
     return NextResponse.json(
       { message: error instanceof Error ? error.message : "投稿を更新できませんでした。" },
       { status: 400 }
+    );
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const body = (await request.json()) as {
+      password?: string;
+      title?: string;
+      contentPath?: string;
+      contentSha?: string;
+    };
+
+    validateAdminPassword(body.password ?? "");
+
+    if (!body.contentPath || !body.contentSha) {
+      throw new Error("本文ファイルとSHAが必要です。");
+    }
+
+    await deleteGithubFile(
+      body.contentPath,
+      body.contentSha,
+      `Delete post: ${body.title || body.contentPath}`,
+      getBranch()
+    );
+
+    return NextResponse.json({ message: "削除しました。新しいコミットからVercelが再デプロイします。" });
+  } catch (error) {
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : "投稿を削除できませんでした。" },
+      { status: error instanceof Error && error.message === "Invalid password." ? 401 : 400 }
     );
   }
 }

@@ -5,6 +5,7 @@ import type { PostKind } from "@/lib/posts";
 
 type UploadState = "idle" | "submitting" | "success" | "error";
 type LoadState = "idle" | "loading" | "ready" | "error";
+type PostTab = "add" | "edit" | "delete";
 
 type AdminWork = {
   title: string;
@@ -28,12 +29,18 @@ function todayValue() {
   return new Date().toISOString().slice(0, 10);
 }
 
-export function PostUploadForm() {
+const postTabs: Array<{ id: PostTab; label: string }> = [
+  { id: "add", label: "追加" },
+  { id: "edit", label: "編集" },
+  { id: "delete", label: "削除" }
+];
+
+export function PostUploadForm({ password }: { password: string }) {
   const [state, setState] = useState<UploadState>("idle");
   const [workLoadState, setWorkLoadState] = useState<LoadState>("idle");
   const [message, setMessage] = useState("");
   const [kind, setKind] = useState<PostKind>("activities");
-  const [password, setPassword] = useState("");
+  const [postTab, setPostTab] = useState<PostTab>("add");
   const [works, setWorks] = useState<AdminWork[]>([]);
   const [posts, setPosts] = useState<AdminPost[]>([]);
   const [selectedPath, setSelectedPath] = useState("");
@@ -145,8 +152,73 @@ export function PostUploadForm() {
     }
   }
 
+  async function handleDelete() {
+    if (!selectedPost) {
+      setMessage("先に投稿を選んでください。");
+      return;
+    }
+
+    const confirmed = window.confirm(`「${selectedPost.title}」を削除しますか？本文ファイルを削除します。`);
+
+    if (!confirmed) {
+      return;
+    }
+
+    setEditState("submitting");
+    setMessage("");
+
+    try {
+      const response = await fetch("/api/admin/posts", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          password,
+          title: selectedPost.title,
+          contentPath: selectedPost.contentPath,
+          contentSha: selectedPost.contentSha
+        })
+      });
+      const result = (await response.json()) as { message?: string };
+
+      if (!response.ok) {
+        throw new Error(result.message ?? "投稿を削除できませんでした。");
+      }
+
+      setEditState("success");
+      setMessage(result.message ?? "削除しました。");
+      setSelectedPath("");
+      await loadPosts();
+    } catch (error) {
+      setEditState("error");
+      setMessage(error instanceof Error ? error.message : "投稿を削除できませんでした。");
+    }
+  }
+
   return (
     <div className="grid gap-8">
+    <div className="flex flex-wrap gap-2 border-b border-line pb-3">
+      {postTabs.map((item) => (
+        <button
+          key={item.id}
+          type="button"
+          onClick={() => {
+            setPostTab(item.id);
+            setMessage("");
+          }}
+          className={`border px-4 py-2 text-sm transition ${
+            postTab === item.id
+              ? "border-ink bg-ink text-bone"
+              : "border-line text-muted hover:border-ink hover:text-ink"
+          }`}
+        >
+          {item.label}
+        </button>
+      ))}
+    </div>
+
+    {postTab === "add" ? (
     <form onSubmit={handleSubmit} className="grid gap-5">
       <div className="grid gap-4 border-b border-line pb-5 sm:grid-cols-2">
         <label className="grid gap-2 text-sm text-muted">
@@ -168,17 +240,7 @@ export function PostUploadForm() {
             ))}
           </select>
         </label>
-        <label className="grid w-48 gap-1.5 text-xs text-muted">
-          管理パスワード
-          <input
-            name="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            type="text"
-            className="border border-line bg-bone px-2.5 py-1.5 text-sm text-ink"
-            required
-          />
-        </label>
+        <input type="hidden" name="password" value={password} />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
@@ -272,17 +334,11 @@ export function PostUploadForm() {
         ) : null}
       </div>
     </form>
+    ) : null}
+
+    {postTab !== "add" ? (
     <section className="grid gap-4 border-t-4 border-ink pt-6">
       <div className="flex flex-wrap items-end gap-3">
-        <label className="grid w-48 gap-1.5 text-xs text-muted">
-          管理パスワード
-          <input
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            type="text"
-            className="border border-line bg-bone px-2.5 py-1.5 text-sm text-ink"
-          />
-        </label>
         <button
           type="button"
           onClick={loadPosts}
@@ -311,6 +367,7 @@ export function PostUploadForm() {
       ) : null}
 
       {selectedPost ? (
+        postTab === "edit" ? (
         <PostEditForm
           key={selectedPost.contentPath}
           post={selectedPost}
@@ -321,8 +378,38 @@ export function PostUploadForm() {
           onLoadWorks={loadWorks}
           onSubmit={handleEdit}
         />
+        ) : (
+          <div className="grid gap-4 border border-line p-4 sm:grid-cols-[1fr_auto] sm:items-center">
+            <div>
+              <p className="text-sm text-muted">選択中の投稿</p>
+              <h2 className="mt-2 text-2xl font-medium text-ink">{selectedPost.title}</h2>
+              <p className="mt-2 text-sm text-muted">{selectedPost.contentPath}</p>
+            </div>
+            <button
+              type="button"
+              onClick={handleDelete}
+              disabled={editState === "submitting"}
+              className="w-fit border border-[#f0a7a7] px-5 py-2.5 text-sm text-[#f0a7a7] transition hover:bg-[#f0a7a7] hover:text-paper disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {editState === "submitting" ? "削除中..." : "投稿を削除"}
+            </button>
+          </div>
+        )
       ) : null}
     </section>
+    ) : null}
+    {postTab !== "add" && message ? (
+      <p
+        role={editState === "error" || postLoadState === "error" || workLoadState === "error" ? "alert" : "status"}
+        className={`border-2 px-4 py-3 text-sm font-black shadow-[3px_3px_0_#21180f] ${
+          editState === "error" || postLoadState === "error" || workLoadState === "error"
+            ? "border-[#d92755] bg-bone text-[#d92755]"
+            : "border-ink bg-[#ffde59] text-ink"
+        }`}
+      >
+        {message}
+      </p>
+    ) : null}
     </div>
   );
 }

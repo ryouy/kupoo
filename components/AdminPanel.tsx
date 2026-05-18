@@ -49,11 +49,18 @@ const emptyMember: Member = {
   image: "/kupoo-mascot.svg",
 };
 
-export function AdminPanel({ authors = [] }: { authors?: string[] }) {
+export function AdminPanel({
+  authors = [],
+  password,
+  setPassword
+}: {
+  authors?: string[];
+  password: string;
+  setPassword: (value: string) => void;
+}) {
   const [section, setSection] = useState<Section>("works");
   const [tab, setTab] = useState<Tab>("add");
   const selectedKind: Kind = "paintings";
-  const [password, setPassword] = useState("");
   const [works, setWorks] = useState<AdminWork[]>([]);
   const [selectedPath, setSelectedPath] = useState("");
   const [loadState, setLoadState] = useState<LoadState>("idle");
@@ -370,15 +377,7 @@ export function AdminPanel({ authors = [] }: { authors?: string[] }) {
       {section === "site" || section === "members" ? (
         <section className="grid gap-5">
           <div className="grid gap-4 border-b border-line pb-4 sm:grid-cols-[1fr_auto_auto] sm:items-end">
-            <label className="grid w-48 gap-1.5 text-xs text-muted">
-              管理パスワード
-              <input
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                type="text"
-                className="border border-line bg-bone px-2.5 py-1.5 text-sm text-ink"
-              />
-            </label>
+            <div />
             <button
               type="button"
               onClick={loadSiteData}
@@ -471,7 +470,7 @@ export function AdminPanel({ authors = [] }: { authors?: string[] }) {
           <div className="border-b border-line pb-4">
             <h2 className="text-2xl font-black text-ink">活動記録・お知らせを追加</h2>
           </div>
-          <PostUploadForm />
+          <PostUploadForm password={password} />
         </section>
       ) : null}
 
@@ -502,15 +501,7 @@ export function AdminPanel({ authors = [] }: { authors?: string[] }) {
       {tab !== "add" ? (
         <section className="grid gap-4">
           <div className="grid gap-4 border-b border-line pb-4 sm:grid-cols-[1fr_auto] sm:items-end">
-            <label className="grid w-48 gap-1.5 text-xs text-muted">
-              管理パスワード
-              <input
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                type="text"
-                className="border border-line bg-bone px-2.5 py-1.5 text-sm text-ink"
-              />
-            </label>
+            <div />
             <button
               type="button"
               onClick={loadWorks}
