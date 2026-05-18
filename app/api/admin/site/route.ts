@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import {
+  buildMarkdown,
   createGithubFile,
   getAdminSiteData,
   getBranch,
+  listAdminWorks,
   updateGithubFile,
   validateAdminPassword
 } from "@/lib/github-admin";
@@ -50,6 +52,31 @@ function validateMembers(value: Member[]) {
   }
 }
 
+function getRenamedMembers(previousMembers: Member[] | undefined, members: Member[]) {
+  if (!Array.isArray(previousMembers)) {
+    return [];
+  }
+
+  return previousMembers
+    .map((previousMember, index) => {
+      const nextMember = members[index];
+
+      if (!nextMember) {
+        return null;
+      }
+
+      const before = previousMember.name.trim();
+      const after = nextMember.name.trim();
+
+      if (!before || !after || before === after) {
+        return null;
+      }
+
+      return { before, after };
+    })
+    .filter((rename): rename is { before: string; after: string } => rename !== null);
+}
+
 export async function GET(request: Request) {
   try {
     validateAdminPassword(passwordFromRequest(request));
@@ -69,6 +96,7 @@ export async function PATCH(request: Request) {
       site?: SiteContent;
       siteSha?: string;
       members?: Member[];
+      previousMembers?: Member[];
       membersSha?: string;
     };
 
@@ -84,6 +112,7 @@ export async function PATCH(request: Request) {
     const branch = getBranch();
     const siteContent = jsonBase64(body.site);
     const membersContent = jsonBase64(body.members);
+    const renamedMembers = getRenamedMembers(body.previousMembers, body.members);
 
     if (body.siteSha) {
       await updateGithubFile("content/site.json", body.siteSha, siteContent, "Update site text", branch);
@@ -95,6 +124,37 @@ export async function PATCH(request: Request) {
       await updateGithubFile("content/members.json", body.membersSha, membersContent, "Update members", branch);
     } else {
       await createGithubFile("content/members.json", membersContent, "Create members", branch);
+    }
+
+    if (renamedMembers.length > 0) {
+      const works = await listAdminWorks();
+
+      for (const work of works) {
+        const rename = renamedMembers.find((item) => item.before === work.author);
+
+        if (!rename) {
+          continue;
+        }
+
+        const markdown = buildMarkdown({
+          kind: work.kind,
+          title: work.title,
+          author: rename.after,
+          slug: work.slug,
+          image: work.image,
+          date: work.date,
+          materials: work.materials,
+          description: work.description
+        });
+
+        await updateGithubFile(
+          work.contentPath,
+          work.contentSha,
+          Buffer.from(markdown, "utf8").toString("base64"),
+          `Update work author: ${work.title}`,
+          branch
+        );
+      }
     }
 
     return NextResponse.json({ message: "保存しました。新しいコミットからVercelが再デプロイします。" });

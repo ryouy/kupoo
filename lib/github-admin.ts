@@ -27,6 +27,17 @@ export type AdminHistoryItem = {
   url: string;
 };
 
+export type AdminPost = {
+  kind: AdminPostKind;
+  title: string;
+  slug: string;
+  date: string;
+  description: string;
+  images: string[];
+  contentPath: string;
+  contentSha: string;
+};
+
 export const allowedKinds = new Set<AdminKind>(["paintings"]);
 export const allowedPostKinds = new Set<AdminPostKind>(["activities", "news"]);
 
@@ -293,6 +304,52 @@ export async function listAdminWorks() {
   }
 
   return works.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+}
+
+export async function listAdminPosts() {
+  const posts: AdminPost[] = [];
+
+  for (const kind of allowedPostKinds) {
+    const directory = await getGithubContent(`content/${kind}`);
+
+    if (!Array.isArray(directory)) {
+      continue;
+    }
+
+    for (const item of directory) {
+      if (item.type !== "file" || !item.name.endsWith(".md")) {
+        continue;
+      }
+
+      const file = await getGithubContent(item.path);
+
+      if (!file || Array.isArray(file) || !file.content) {
+        continue;
+      }
+
+      const source = Buffer.from(file.content.replace(/\n/g, ""), "base64").toString("utf8");
+      const parsed = matter(source);
+      const slug = typeof parsed.data.slug === "string" ? parsed.data.slug : item.name.replace(/\.md$/, "");
+      const images = Array.isArray(parsed.data.images)
+        ? parsed.data.images.filter((image): image is string => typeof image === "string" && image.length > 0)
+        : typeof parsed.data.image === "string"
+          ? [parsed.data.image]
+          : [];
+
+      posts.push({
+        kind,
+        title: typeof parsed.data.title === "string" ? parsed.data.title : slug,
+        slug,
+        date: typeof parsed.data.date === "string" ? parsed.data.date : "",
+        images,
+        description: parsed.content.trim(),
+        contentPath: item.path,
+        contentSha: file.sha
+      });
+    }
+  }
+
+  return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
 export async function listAdminHistory() {

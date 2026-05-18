@@ -13,7 +13,7 @@ export function UploadForm({ authors = [] }: { authors?: string[] }) {
   const [state, setState] = useState<UploadState>("idle");
   const [message, setMessage] = useState("");
   const [dateKey, setDateKey] = useState(0);
-  const authorOptions = [...authors.filter(Boolean), UNKNOWN_AUTHOR];
+  const authorOptions = Array.from(new Set([...authors.filter(Boolean), UNKNOWN_AUTHOR]));
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -68,17 +68,19 @@ export function UploadForm({ authors = [] }: { authors?: string[] }) {
 
         <label className="grid gap-2 text-sm text-muted">
           製作者
-          <select
+          <input
             name="author"
+            list="upload-author-options"
             className="border border-line bg-bone px-3 py-2.5 text-ink"
             required
-          >
+          />
+          <datalist id="upload-author-options">
             {authorOptions.map((author) => (
               <option key={author} value={author}>
                 {author}
               </option>
             ))}
-          </select>
+          </datalist>
         </label>
 
         <label className="grid gap-2 text-sm text-muted">

@@ -62,6 +62,7 @@ export function AdminPanel({ authors = [] }: { authors?: string[] }) {
   const [site, setSite] = useState<SiteContent | null>(null);
   const [siteSha, setSiteSha] = useState("");
   const [members, setMembers] = useState<Member[]>([]);
+  const [previousMembers, setPreviousMembers] = useState<Member[]>([]);
   const [membersSha, setMembersSha] = useState("");
   const [siteState, setSiteState] = useState<LoadState>("idle");
   const [siteSubmitState, setSiteSubmitState] = useState<SubmitState>("idle");
@@ -202,6 +203,7 @@ export function AdminPanel({ authors = [] }: { authors?: string[] }) {
       setSite(result.site.data);
       setSiteSha(result.site.sha);
       setMembers(result.members.data);
+      setPreviousMembers(result.members.data);
       setMembersSha(result.members.sha);
       setSiteState("ready");
     } catch (error) {
@@ -230,6 +232,7 @@ export function AdminPanel({ authors = [] }: { authors?: string[] }) {
           site,
           siteSha,
           members,
+          previousMembers,
           membersSha
         })
       });
@@ -566,18 +569,20 @@ export function AdminPanel({ authors = [] }: { authors?: string[] }) {
                 </label>
                 <label className="grid gap-2 text-sm text-muted">
                   製作者
-                  <select
+                  <input
                     name="author"
+                    list={`admin-author-options-${selectedWork.slug}`}
                     defaultValue={selectedWork.author}
                     className="border border-line bg-bone px-3 py-2.5 text-ink"
                     required
-                  >
+                  />
+                  <datalist id={`admin-author-options-${selectedWork.slug}`}>
                     {Array.from(new Set([...authors, selectedWork.author, UNKNOWN_AUTHOR].filter(Boolean))).map((author) => (
                       <option key={author} value={author}>
                         {author}
                       </option>
                     ))}
-                  </select>
+                  </datalist>
                 </label>
                 <label className="grid gap-2 text-sm text-muted">
                   URL名

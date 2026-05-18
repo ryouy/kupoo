@@ -45,6 +45,30 @@ body > * {
   margin-top: 1rem;
 }
 
+.floating-art {
+  will-change: transform;
+}
+
+.floating-art-logo {
+  animation: kupoo-art-float-logo 9s ease-in-out infinite;
+}
+
+.floating-art-1 {
+  animation: kupoo-art-float-one 8.5s ease-in-out infinite;
+}
+
+.floating-art-2 {
+  animation: kupoo-art-float-two 10s ease-in-out infinite;
+}
+
+.floating-art-3 {
+  animation: kupoo-art-float-three 9.5s ease-in-out infinite;
+}
+
+.floating-art-4 {
+  animation: kupoo-art-float-four 11s ease-in-out infinite;
+}
+
 .doodle-backdrop::before {
   position: fixed;
   inset: 0;
@@ -102,6 +126,61 @@ body > * {
 
   to {
     background-position: right 496px top -292px;
+  }
+}
+
+@keyframes kupoo-art-float-logo {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-0.4deg);
+  }
+
+  50% {
+    transform: translate3d(10px, -12px, 0) rotate(0.7deg);
+  }
+}
+
+@keyframes kupoo-art-float-one {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-1.2deg);
+  }
+
+  50% {
+    transform: translate3d(-8px, 10px, 0) rotate(0.8deg);
+  }
+}
+
+@keyframes kupoo-art-float-two {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(1.8deg);
+  }
+
+  50% {
+    transform: translate3d(12px, 8px, 0) rotate(2.8deg);
+  }
+}
+
+@keyframes kupoo-art-float-three {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-2deg);
+  }
+
+  50% {
+    transform: translate3d(-10px, -7px, 0) rotate(-0.8deg);
+  }
+}
+
+@keyframes kupoo-art-float-four {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0.6deg);
+  }
+
+  50% {
+    transform: translate3d(8px, -11px, 0) rotate(-0.6deg);
   }
 }
 

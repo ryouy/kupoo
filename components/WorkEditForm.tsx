@@ -68,18 +68,20 @@ export function WorkEditForm({
         </label>
         <label className="grid gap-2 text-sm text-muted">
           製作者
-          <select
+          <input
             name="author"
+            list={`work-author-options-${work.slug}`}
             defaultValue={work.author}
             className="border border-line bg-bone px-3 py-2.5 text-ink"
             required
-          >
+          />
+          <datalist id={`work-author-options-${work.slug}`}>
             {authorOptions.map((author) => (
               <option key={author} value={author}>
                 {author}
               </option>
             ))}
-          </select>
+          </datalist>
         </label>
         <label className="grid gap-2 text-sm text-muted">
           URL名

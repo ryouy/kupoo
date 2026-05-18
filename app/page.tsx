@@ -84,7 +84,7 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-2 gap-3 sm:gap-4">
-          <div className="group relative col-span-2 overflow-hidden border-4 border-ink bg-bone shadow-quiet">
+          <div className="floating-art floating-art-logo group relative col-span-2 overflow-hidden border-4 border-ink bg-bone shadow-quiet">
             <img
               src="/kupoo-logo.svg"
               alt="Kupoo公式ロゴ"
@@ -95,9 +95,9 @@ export default function Home() {
             <Link
               key={item.slug}
               href={`/${item.kind}/${item.slug}`}
-              className={`group relative overflow-hidden border-4 border-ink bg-bone shadow-quiet ${
+              className={`floating-art floating-art-${index + 1} group relative overflow-hidden border-4 border-ink bg-bone shadow-quiet ${
                 index === 0 || index === 3 ? "aspect-[4/5]" : "aspect-[5/4]"
-              } ${index === 1 ? "rotate-2" : index === 2 ? "rotate-[-2deg]" : ""}`}
+              }`}
             >
               <img
                 src={item.image}

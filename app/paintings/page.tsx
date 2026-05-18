@@ -20,7 +20,7 @@ export default function PaintingsPage() {
             作品集
           </h1>
           <p className="mt-3 text-base font-bold leading-7 text-muted">
-            Kupooメンバーの絵がずらっと並ぶ場所。公開順でもランダムでも、気分でどうぞ。
+            Kupooメンバーの絵がずらっと並ぶ場所。公開順でもランダムでも、気分で。
           </p>
         </div>
       </header>

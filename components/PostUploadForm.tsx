@@ -1,9 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { PostKind } from "@/lib/posts";
 
 type UploadState = "idle" | "submitting" | "success" | "error";
+type LoadState = "idle" | "loading" | "ready" | "error";
+
+type AdminWork = {
+  title: string;
+  author: string;
+  slug: string;
+  image: string;
+};
+
+type AdminPost = {
+  kind: PostKind;
+  title: string;
+  slug: string;
+  date: string;
+  description: string;
+  images: string[];
+  contentPath: string;
+  contentSha: string;
+};
 
 function todayValue() {
   return new Date().toISOString().slice(0, 10);
@@ -11,8 +30,65 @@ function todayValue() {
 
 export function PostUploadForm() {
   const [state, setState] = useState<UploadState>("idle");
+  const [workLoadState, setWorkLoadState] = useState<LoadState>("idle");
   const [message, setMessage] = useState("");
+  const [kind, setKind] = useState<PostKind>("activities");
+  const [password, setPassword] = useState("");
+  const [works, setWorks] = useState<AdminWork[]>([]);
+  const [posts, setPosts] = useState<AdminPost[]>([]);
+  const [selectedPath, setSelectedPath] = useState("");
+  const [postLoadState, setPostLoadState] = useState<LoadState>("idle");
+  const [editState, setEditState] = useState<UploadState>("idle");
   const [dateKey, setDateKey] = useState(0);
+
+  const selectedPost = useMemo(
+    () => posts.find((post) => post.contentPath === selectedPath) ?? posts[0] ?? null,
+    [posts, selectedPath]
+  );
+
+  async function loadWorks() {
+    setWorkLoadState("loading");
+    setMessage("");
+
+    try {
+      const response = await fetch(`/api/admin/works?password=${encodeURIComponent(password)}`);
+      const result = (await response.json()) as { works?: AdminWork[]; message?: string };
+
+      if (!response.ok) {
+        throw new Error(result.message ?? "作品を読み込めませんでした。");
+      }
+
+      setWorks(result.works ?? []);
+      setWorkLoadState("ready");
+    } catch (error) {
+      setWorkLoadState("error");
+      setMessage(error instanceof Error ? error.message : "作品を読み込めませんでした。");
+    }
+  }
+
+  async function loadPosts() {
+    setPostLoadState("loading");
+    setMessage("");
+
+    try {
+      const response = await fetch(`/api/admin/posts?password=${encodeURIComponent(password)}`);
+      const result = (await response.json()) as { posts?: AdminPost[]; message?: string };
+
+      if (!response.ok) {
+        throw new Error(result.message ?? "投稿を読み込めませんでした。");
+      }
+
+      const nextPosts = result.posts ?? [];
+      setPosts(nextPosts);
+      setSelectedPath((current) =>
+        nextPosts.some((post) => post.contentPath === current) ? current : nextPosts[0]?.contentPath ?? ""
+      );
+      setPostLoadState("ready");
+    } catch (error) {
+      setPostLoadState("error");
+      setMessage(error instanceof Error ? error.message : "投稿を読み込めませんでした。");
+    }
+  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -36,6 +112,7 @@ export function PostUploadForm() {
       setState("success");
       setMessage(result.message ?? "保存しました。新しいコミットからVercelが再デプロイします。");
       form.reset();
+      setKind("activities");
       setDateKey((current) => current + 1);
     } catch (error) {
       setState("error");
@@ -43,12 +120,44 @@ export function PostUploadForm() {
     }
   }
 
+  async function handleEdit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setEditState("submitting");
+    setMessage("");
+
+    try {
+      const response = await fetch("/api/admin/posts", {
+        method: "PATCH",
+        body: new FormData(event.currentTarget)
+      });
+      const result = (await response.json()) as { message?: string };
+
+      if (!response.ok) {
+        throw new Error(result.message ?? "投稿を更新できませんでした。");
+      }
+
+      setEditState("success");
+      setMessage(result.message ?? "保存しました。新しいコミットからVercelが再デプロイします。");
+      await loadPosts();
+    } catch (error) {
+      setEditState("error");
+      setMessage(error instanceof Error ? error.message : "投稿を更新できませんでした。");
+    }
+  }
+
   return (
+    <div className="grid gap-8">
     <form onSubmit={handleSubmit} className="grid gap-5">
       <div className="grid gap-4 border-b border-line pb-5 sm:grid-cols-2">
         <label className="grid gap-2 text-sm text-muted">
           種類
-          <select name="kind" className="border border-line bg-bone px-3 py-2.5 text-ink" required>
+          <select
+            name="kind"
+            value={kind}
+            onChange={(event) => setKind(event.target.value as PostKind)}
+            className="border border-line bg-bone px-3 py-2.5 text-ink"
+            required
+          >
             {([
               ["activities", "活動記録"],
               ["news", "お知らせ"]
@@ -61,7 +170,14 @@ export function PostUploadForm() {
         </label>
         <label className="grid w-48 gap-1.5 text-xs text-muted">
           管理パスワード
-          <input name="password" type="text" className="border border-line bg-bone px-2.5 py-1.5 text-sm text-ink" required />
+          <input
+            name="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            type="text"
+            className="border border-line bg-bone px-2.5 py-1.5 text-sm text-ink"
+            required
+          />
         </label>
       </div>
 
@@ -88,16 +204,48 @@ export function PostUploadForm() {
       </div>
 
       <label className="grid gap-2 text-sm text-muted">
-        写真
+        写真（複数選択できます）
         <input
           name="images"
           type="file"
           accept="image/jpeg,image/png,image/webp,image/avif"
           multiple
           className="border border-line bg-bone px-3 py-2.5 text-ink file:mr-4 file:border-0 file:bg-ink file:px-4 file:py-2 file:text-bone"
-          required
         />
       </label>
+
+      {kind === "activities" ? (
+        <section className="grid gap-3 border-4 border-ink bg-bone p-4 shadow-[3px_3px_0_#21180f]">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-ink pb-3">
+            <div>
+              <p className="text-sm font-black text-ink">作品集から画像を貼り付ける</p>
+              <p className="mt-1 text-xs font-bold text-muted">活動の様子の写真とは別に、既存作品の画像も選べます。</p>
+            </div>
+            <button
+              type="button"
+              onClick={loadWorks}
+              disabled={workLoadState === "loading"}
+              className="border-2 border-ink bg-[#ffde59] px-3 py-2 text-xs font-black text-ink transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {workLoadState === "loading" ? "読み込み中..." : "作品を読み込む"}
+            </button>
+          </div>
+          {works.length > 0 ? (
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {works.map((work) => (
+                <label key={work.slug} className="grid cursor-pointer gap-2 border-2 border-ink bg-paper p-2 text-sm font-black text-ink transition hover:bg-[#b8ff6a]">
+                  <input name="workImages" type="checkbox" value={work.image} className="h-4 w-4" />
+                  <img src={work.image} alt="" className="aspect-[4/3] w-full border-2 border-ink object-cover" />
+                  <span>{work.title}</span>
+                  <span className="text-xs text-muted">{work.author}</span>
+                </label>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm font-bold text-muted">写真アップロードだけでも投稿できます。</p>
+          )}
+        </section>
+      ) : null}
 
       <label className="grid gap-2 text-sm text-muted">
         本文
@@ -123,6 +271,166 @@ export function PostUploadForm() {
           </p>
         ) : null}
       </div>
+    </form>
+    <section className="grid gap-4 border-t-4 border-ink pt-6">
+      <div className="flex flex-wrap items-end gap-3">
+        <label className="grid w-48 gap-1.5 text-xs text-muted">
+          管理パスワード
+          <input
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            type="text"
+            className="border border-line bg-bone px-2.5 py-1.5 text-sm text-ink"
+          />
+        </label>
+        <button
+          type="button"
+          onClick={loadPosts}
+          disabled={postLoadState === "loading"}
+          className="border border-ink bg-ink px-5 py-2.5 text-sm text-bone transition hover:bg-transparent hover:text-ink disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {postLoadState === "loading" ? "読み込み中..." : "投稿を読み込む"}
+        </button>
+      </div>
+
+      {posts.length > 0 ? (
+        <label className="grid gap-2 text-sm text-muted">
+          編集する投稿
+          <select
+            value={selectedPost?.contentPath ?? ""}
+            onChange={(event) => setSelectedPath(event.target.value)}
+            className="border border-line bg-bone px-3 py-2.5 text-ink"
+          >
+            {posts.map((post) => (
+              <option key={post.contentPath} value={post.contentPath}>
+                {post.kind === "activities" ? "活動記録" : "お知らせ"}: {post.title}
+              </option>
+            ))}
+          </select>
+        </label>
+      ) : null}
+
+      {selectedPost ? (
+        <PostEditForm
+          key={selectedPost.contentPath}
+          post={selectedPost}
+          password={password}
+          works={works}
+          workLoadState={workLoadState}
+          disabled={editState === "submitting"}
+          onLoadWorks={loadWorks}
+          onSubmit={handleEdit}
+        />
+      ) : null}
+    </section>
+    </div>
+  );
+}
+
+function PostEditForm({
+  post,
+  password,
+  works,
+  workLoadState,
+  disabled,
+  onLoadWorks,
+  onSubmit
+}: {
+  post: AdminPost;
+  password: string;
+  works: AdminWork[];
+  workLoadState: LoadState;
+  disabled: boolean;
+  onLoadWorks: () => void;
+  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+}) {
+  return (
+    <form onSubmit={onSubmit} className="grid gap-5 border-4 border-ink bg-bone p-4 shadow-[3px_3px_0_#21180f]">
+      <input type="hidden" name="password" value={password} />
+      <input type="hidden" name="contentPath" value={post.contentPath} />
+      <input type="hidden" name="contentSha" value={post.contentSha} />
+      <input type="hidden" name="kind" value={post.kind} />
+      <div className="grid gap-4 sm:grid-cols-4">
+        <div className="grid gap-2 text-sm text-muted">
+          種類
+          <p className="border border-line bg-paper px-3 py-2.5 text-ink">
+            {post.kind === "activities" ? "活動記録" : "お知らせ"}
+          </p>
+        </div>
+        <label className="grid gap-2 text-sm text-muted">
+          タイトル
+          <input name="title" defaultValue={post.title} className="border border-line bg-bone px-3 py-2.5 text-ink" required />
+        </label>
+        <label className="grid gap-2 text-sm text-muted">
+          URL名
+          <input name="slug" defaultValue={post.slug} className="border border-line bg-bone px-3 py-2.5 text-ink" required />
+        </label>
+        <label className="grid gap-2 text-sm text-muted">
+          日付
+          <input name="date" type="date" defaultValue={post.date} className="border border-line bg-bone px-3 py-2.5 text-ink" required />
+        </label>
+      </div>
+
+      <section className="grid gap-3">
+        <p className="text-sm font-black text-muted">残す画像</p>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {post.images.map((image) => (
+            <label key={image} className="grid cursor-pointer gap-2 border-2 border-ink bg-paper p-2 text-xs font-black text-ink">
+              <input name="existingImages" type="checkbox" value={image} defaultChecked className="h-4 w-4" />
+              <img src={image} alt="" className="aspect-[4/3] w-full border-2 border-ink object-cover" />
+            </label>
+          ))}
+        </div>
+      </section>
+
+      <label className="grid gap-2 text-sm text-muted">
+        追加写真
+        <input
+          name="images"
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/avif"
+          multiple
+          className="border border-line bg-bone px-3 py-2.5 text-ink file:mr-4 file:border-0 file:bg-ink file:px-4 file:py-2 file:text-bone"
+        />
+      </label>
+
+      <section className="grid gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm font-black text-muted">作品集から追加</p>
+          <button
+            type="button"
+            onClick={onLoadWorks}
+            disabled={workLoadState === "loading"}
+            className="border-2 border-ink bg-[#ffde59] px-3 py-2 text-xs font-black text-ink transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {workLoadState === "loading" ? "読み込み中..." : "作品を読み込む"}
+          </button>
+        </div>
+        {works.length > 0 ? (
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {works.map((work) => (
+              <label key={work.slug} className="grid cursor-pointer gap-2 border-2 border-ink bg-paper p-2 text-xs font-black text-ink transition hover:bg-[#b8ff6a]">
+                <input name="workImages" type="checkbox" value={work.image} disabled={post.images.includes(work.image)} className="h-4 w-4" />
+                <img src={work.image} alt="" className="aspect-[4/3] w-full border-2 border-ink object-cover" />
+                <span>{work.title}</span>
+              </label>
+            ))}
+          </div>
+        ) : null}
+      </section>
+
+      <label className="grid gap-2 text-sm text-muted">
+        本文
+        <textarea name="description" rows={8} defaultValue={post.description} className="border border-line bg-bone px-3 py-2.5 leading-7 text-ink" required />
+      </label>
+
+      <button
+        type="submit"
+        disabled={disabled}
+        className="w-fit border border-ink bg-ink px-5 py-2.5 text-sm text-bone transition hover:bg-transparent hover:text-ink disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        {disabled ? "保存中..." : "変更を保存"}
+      </button>
     </form>
   );
 }

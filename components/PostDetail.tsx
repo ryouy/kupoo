@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getGalleryItems } from "@/lib/content";
 import { formatPostDate, getPostLabel, type PostItem, type PostNeighbor } from "@/lib/posts";
 
 export function PostDetail({
@@ -12,6 +13,7 @@ export function PostDetail({
 }) {
   const label = getPostLabel(item.kind);
   const backHref = `/${item.kind}`;
+  const workByImage = new Map(getGalleryItems("paintings").map((work) => [work.image, work]));
 
   return (
     <article className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-14">
@@ -31,16 +33,25 @@ export function PostDetail({
 
       {item.images.length > 0 ? (
         <div className="mb-8 grid gap-4 sm:grid-cols-2">
-          {item.images.map((image, index) => (
-            <figure
-              key={`${image}-${index}`}
-              className={`overflow-hidden border-4 border-ink bg-bone p-2 shadow-quiet ${
-                index === 0 ? "sm:col-span-2" : ""
-              }`}
-            >
-              <img src={image} alt="" className="max-h-[72vh] w-full object-contain" />
-            </figure>
-          ))}
+          {item.images.map((image, index) => {
+            const work = workByImage.get(image);
+            const className = `overflow-hidden border-4 border-ink bg-bone p-2 shadow-quiet ${
+              index === 0 ? "sm:col-span-2" : ""
+            }`;
+            const imageElement = <img src={image} alt={work?.title ?? ""} className="max-h-[72vh] w-full object-contain" />;
+
+            return (
+              <figure key={`${image}-${index}`} className={className}>
+                {work ? (
+                  <Link href={`/paintings/${work.slug}`} className="block transition hover:scale-[1.01]">
+                    {imageElement}
+                  </Link>
+                ) : (
+                  imageElement
+                )}
+              </figure>
+            );
+          })}
         </div>
       ) : null}
 
