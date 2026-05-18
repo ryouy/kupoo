@@ -47,6 +47,8 @@ export function PostUploadForm({ password }: { password: string }) {
   const [postLoadState, setPostLoadState] = useState<LoadState>("idle");
   const [editState, setEditState] = useState<UploadState>("idle");
   const [dateKey, setDateKey] = useState(0);
+  const [addWorkPickerOpen, setAddWorkPickerOpen] = useState(false);
+  const [addWorkImages, setAddWorkImages] = useState<string[]>([]);
 
   const selectedPost = useMemo(
     () => posts.find((post) => post.contentPath === selectedPath) ?? posts[0] ?? null,
@@ -120,6 +122,8 @@ export function PostUploadForm({ password }: { password: string }) {
       setMessage(result.message ?? "保存しました。新しいコミットからVercelが再デプロイします。");
       form.reset();
       setKind("activities");
+      setAddWorkImages([]);
+      setAddWorkPickerOpen(false);
       setDateKey((current) => current + 1);
     } catch (error) {
       setState("error");
@@ -276,38 +280,23 @@ export function PostUploadForm({ password }: { password: string }) {
         />
       </label>
 
-      {kind === "activities" ? (
-        <section className="grid gap-3 border-4 border-ink bg-bone p-4 shadow-[3px_3px_0_#21180f]">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-ink pb-3">
-            <div>
-              <p className="text-sm font-black text-ink">作品集から画像を貼り付ける</p>
-              <p className="mt-1 text-xs font-bold text-muted">活動の様子の写真とは別に、既存作品の画像も選べます。</p>
-            </div>
-            <button
-              type="button"
-              onClick={loadWorks}
-              disabled={workLoadState === "loading"}
-              className="border-2 border-ink bg-[#ffde59] px-3 py-2 text-xs font-black text-ink transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {workLoadState === "loading" ? "読み込み中..." : "作品を読み込む"}
-            </button>
-          </div>
-          {works.length > 0 ? (
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {works.map((work) => (
-                <label key={work.slug} className="grid cursor-pointer gap-2 border-2 border-ink bg-paper p-2 text-sm font-black text-ink transition hover:bg-[#b8ff6a]">
-                  <input name="workImages" type="checkbox" value={work.image} className="h-4 w-4" />
-                  <img src={work.image} alt="" className="aspect-[4/3] w-full border-2 border-ink object-cover" />
-                  <span>{work.title}</span>
-                  <span className="text-xs text-muted">{work.author}</span>
-                </label>
-              ))}
-            </div>
-          ) : (
-            <p className="text-sm font-bold text-muted">写真アップロードだけでも投稿できます。</p>
-          )}
-        </section>
-      ) : null}
+      <WorkImagePicker
+        works={works}
+        selectedImages={addWorkImages}
+        open={addWorkPickerOpen}
+        workLoadState={workLoadState}
+        hiddenName="workImages"
+        onLoad={async () => {
+          await loadWorks();
+          setAddWorkPickerOpen(true);
+        }}
+        onSelect={(image) => {
+          setAddWorkImages((current) => (current.includes(image) ? current : [...current, image]));
+          setAddWorkPickerOpen(false);
+        }}
+        onRemove={(image) => setAddWorkImages((current) => current.filter((item) => item !== image))}
+        onClose={() => setAddWorkPickerOpen(false)}
+      />
 
       <label className="grid gap-2 text-sm text-muted">
         本文
@@ -428,9 +417,12 @@ function PostEditForm({
   works: AdminWork[];
   workLoadState: LoadState;
   disabled: boolean;
-  onLoadWorks: () => void;
+  onLoadWorks: () => Promise<void>;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 }) {
+  const [workPickerOpen, setWorkPickerOpen] = useState(false);
+  const [workImages, setWorkImages] = useState<string[]>([]);
+
   return (
     <form onSubmit={onSubmit} className="grid gap-5 border-4 border-ink bg-bone p-4 shadow-[3px_3px_0_#21180f]">
       <input type="hidden" name="password" value={password} />
@@ -481,30 +473,23 @@ function PostEditForm({
         />
       </label>
 
-      <section className="grid gap-3">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-sm font-black text-muted">作品集から追加</p>
-          <button
-            type="button"
-            onClick={onLoadWorks}
-            disabled={workLoadState === "loading"}
-            className="border-2 border-ink bg-[#ffde59] px-3 py-2 text-xs font-black text-ink transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {workLoadState === "loading" ? "読み込み中..." : "作品を読み込む"}
-          </button>
-        </div>
-        {works.length > 0 ? (
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {works.map((work) => (
-              <label key={work.slug} className="grid cursor-pointer gap-2 border-2 border-ink bg-paper p-2 text-xs font-black text-ink transition hover:bg-[#b8ff6a]">
-                <input name="workImages" type="checkbox" value={work.image} disabled={post.images.includes(work.image)} className="h-4 w-4" />
-                <img src={work.image} alt="" className="aspect-[4/3] w-full border-2 border-ink object-cover" />
-                <span>{work.title}</span>
-              </label>
-            ))}
-          </div>
-        ) : null}
-      </section>
+      <WorkImagePicker
+        works={works.filter((work) => !post.images.includes(work.image))}
+        selectedImages={workImages}
+        open={workPickerOpen}
+        workLoadState={workLoadState}
+        hiddenName="workImages"
+        onLoad={async () => {
+          await onLoadWorks();
+          setWorkPickerOpen(true);
+        }}
+        onSelect={(image) => {
+          setWorkImages((current) => (current.includes(image) ? current : [...current, image]));
+          setWorkPickerOpen(false);
+        }}
+        onRemove={(image) => setWorkImages((current) => current.filter((item) => item !== image))}
+        onClose={() => setWorkPickerOpen(false)}
+      />
 
       <label className="grid gap-2 text-sm text-muted">
         本文
@@ -519,5 +504,96 @@ function PostEditForm({
         {disabled ? "保存中..." : "変更を保存"}
       </button>
     </form>
+  );
+}
+
+function WorkImagePicker({
+  works,
+  selectedImages,
+  open,
+  workLoadState,
+  hiddenName,
+  onLoad,
+  onSelect,
+  onRemove,
+  onClose
+}: {
+  works: AdminWork[];
+  selectedImages: string[];
+  open: boolean;
+  workLoadState: LoadState;
+  hiddenName: string;
+  onLoad: () => Promise<void>;
+  onSelect: (image: string) => void;
+  onRemove: (image: string) => void;
+  onClose: () => void;
+}) {
+  return (
+    <section className="grid gap-3 border-4 border-ink bg-bone p-4 shadow-[3px_3px_0_#21180f]">
+      {selectedImages.map((image) => (
+        <input key={image} type="hidden" name={hiddenName} value={image} />
+      ))}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-ink pb-3">
+        <div>
+          <p className="text-sm font-black text-ink">作品集から画像を貼り付ける</p>
+          <p className="mt-1 text-xs font-bold text-muted">お知らせ・活動記録どちらにも既存作品の画像を入れられます。</p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {open ? (
+            <button
+              type="button"
+              onClick={onClose}
+              className="border-2 border-ink bg-bone px-3 py-2 text-xs font-black text-ink transition hover:-translate-y-0.5"
+            >
+              閉じる
+            </button>
+          ) : null}
+          <button
+            type="button"
+            onClick={onLoad}
+            disabled={workLoadState === "loading"}
+            className="border-2 border-ink bg-[#ffde59] px-3 py-2 text-xs font-black text-ink transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {workLoadState === "loading" ? "読み込み中..." : "作品を選ぶ"}
+          </button>
+        </div>
+      </div>
+
+      {selectedImages.length > 0 ? (
+        <div className="grid gap-2 sm:grid-cols-3 lg:grid-cols-5">
+          {selectedImages.map((image) => (
+            <div key={image} className="grid gap-2 border-2 border-ink bg-paper p-2">
+              <img src={image} alt="" className="aspect-[4/3] w-full border-2 border-ink object-cover" />
+              <button
+                type="button"
+                onClick={() => onRemove(image)}
+                className="border border-[#d92755] px-2 py-1 text-xs font-black text-[#d92755] transition hover:bg-[#d92755] hover:text-bone"
+              >
+                外す
+              </button>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="text-sm font-bold text-muted">作品画像を選ぶと、ここに小さく表示されます。</p>
+      )}
+
+      {open && works.length > 0 ? (
+        <div className="grid max-h-[360px] gap-3 overflow-y-auto border-t-2 border-ink pt-3 sm:grid-cols-2 lg:grid-cols-3">
+          {works.map((work) => (
+            <button
+              key={work.slug}
+              type="button"
+              onClick={() => onSelect(work.image)}
+              className="grid gap-2 border-2 border-ink bg-paper p-2 text-left text-sm font-black text-ink transition hover:bg-[#b8ff6a]"
+            >
+              <img src={work.image} alt="" className="aspect-[4/3] w-full border-2 border-ink object-cover" />
+              <span>{work.title}</span>
+              <span className="text-xs text-muted">{work.author}</span>
+            </button>
+          ))}
+        </div>
+      ) : null}
+    </section>
   );
 }
