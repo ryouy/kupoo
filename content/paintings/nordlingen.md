@@ -1,6 +1,6 @@
 ---
 title: "Nördlingen"
-author: "てんとう虫"
+author: "しなちく"
 slug: "nordlingen"
 image: "/images/paintings/nordlingen.png"
 date: "2026-04-07"
