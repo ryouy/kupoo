@@ -64,7 +64,7 @@ export async function POST(request: Request) {
     const kind = field(formData, "kind") as AdminPostKind;
 
     if (!allowedPostKinds.has(kind)) {
-      throw new Error("種類は活動記録かお知らせのみです。");
+      throw new Error("種類はお知らせのみです。");
     }
 
     const title = field(formData, "title");
@@ -149,7 +149,7 @@ export async function PATCH(request: Request) {
     const kind = field(formData, "kind") as AdminPostKind;
 
     if (!allowedPostKinds.has(kind)) {
-      throw new Error("種類は活動記録かお知らせのみです。");
+      throw new Error("種類はお知らせのみです。");
     }
 
     const title = field(formData, "title");

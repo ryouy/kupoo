@@ -2,7 +2,6 @@ import Link from "next/link";
 
 const navItems = [
   { href: "/paintings", label: "作品集", tilt: "rotate-[-1deg]", hover: "hover:bg-[#57d4c4]" },
-  { href: "/activities", label: "活動記録", tilt: "rotate-[2deg]", hover: "hover:bg-[#b8ff6a]" },
   { href: "/news", label: "お知らせ", tilt: "rotate-[-1deg]", hover: "hover:bg-[#ffde59]" },
   { href: "/about", label: "Kupooとは", tilt: "rotate-[1deg]", hover: "hover:bg-[#ffde59]" },
   { href: "/members", label: "メンバー", tilt: "rotate-[-2deg]", hover: "hover:bg-[#ff5e8f]" },

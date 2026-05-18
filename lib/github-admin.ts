@@ -2,7 +2,7 @@ import matter from "gray-matter";
 import { fallbackMembers, fallbackSiteContent, type Member, type SiteContent } from "@/lib/site-data";
 
 export type AdminKind = "paintings";
-export type AdminPostKind = "activities" | "news";
+export type AdminPostKind = "news";
 
 export type AdminWork = {
   kind: AdminKind;
@@ -39,7 +39,7 @@ export type AdminPost = {
 };
 
 export const allowedKinds = new Set<AdminKind>(["paintings"]);
-export const allowedPostKinds = new Set<AdminPostKind>(["activities", "news"]);
+export const allowedPostKinds = new Set<AdminPostKind>(["news"]);
 
 export const allowedImageTypes = new Map([
   ["image/jpeg", "jpg"],

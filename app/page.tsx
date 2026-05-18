@@ -48,10 +48,10 @@ export default function Home() {
               </Link>
             </div>
             <Link
-              href="/activities"
+              href="/news"
               className="mt-5 block w-full border-2 border-ink bg-[#b8ff6a] px-5 py-2.5 text-center text-sm font-black text-ink shadow-[3px_3px_0_#21180f] transition hover:-translate-y-0.5"
             >
-              活動記録
+              お知らせ
             </Link>
           </div>
           <section className="mt-8 max-w-xl border-4 border-ink bg-bone/85 p-4 shadow-quiet">

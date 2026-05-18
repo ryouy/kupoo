@@ -37,7 +37,7 @@ const tabs: Array<{ id: Tab; label: string }> = [
 
 const sections: Array<{ id: Section; label: string }> = [
   { id: "works", label: "作品集" },
-  { id: "posts", label: "活動記録・お知らせ" },
+  { id: "posts", label: "お知らせ" },
   { id: "site", label: "サイト文言" },
   { id: "members", label: "メンバー" }
 ];
@@ -468,7 +468,7 @@ export function AdminPanel({
       {section === "posts" ? (
         <section className="grid gap-5">
           <div className="border-b border-line pb-4">
-            <h2 className="text-2xl font-black text-ink">活動記録・お知らせを追加</h2>
+            <h2 className="text-2xl font-black text-ink">お知らせを管理する</h2>
           </div>
           <PostUploadForm password={password} />
         </section>

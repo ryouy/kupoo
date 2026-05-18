@@ -4,7 +4,7 @@ import matter from "gray-matter";
 
 const contentRoot = path.join(process.cwd(), "content");
 
-export type PostKind = "activities" | "news";
+export type PostKind = "news";
 
 export type PostItem = {
   kind: PostKind;
@@ -18,7 +18,6 @@ export type PostItem = {
 export type PostNeighbor = Pick<PostItem, "slug" | "title"> | null;
 
 const postLabels: Record<PostKind, string> = {
-  activities: "活動記録",
   news: "お知らせ"
 };
 

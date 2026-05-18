@@ -65,7 +65,7 @@ export const fallbackSiteContent: SiteContent = {
     eyebrow: "会津大学 非公式お絵描きサークル",
     title: "Kupoo",
     tagline: "未来のバンクシーがここから生まれる",
-    description: "アトリエきやれでもぐもぐしながら、気ままに絵を描く人たちのWebギャラリーです。作品、ノリ、活動記録、たぶん全部ちょっとにぎやか。",
+    description: "アトリエきやれでもぐもぐしながら、気ままに絵を描く人たちのWebギャラリーです。作品、ノリ、お知らせ、たぶん全部ちょっとにぎやか。",
     primaryCta: "作品を見る",
     secondaryCta: "Kupooとは",
     latestEyebrow: "できたて / たぶん自信作",

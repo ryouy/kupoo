@@ -1,8 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { PostKind } from "@/lib/posts";
-
 type UploadState = "idle" | "submitting" | "success" | "error";
 type LoadState = "idle" | "loading" | "ready" | "error";
 type PostTab = "add" | "edit" | "delete";
@@ -15,7 +13,7 @@ type AdminWork = {
 };
 
 type AdminPost = {
-  kind: PostKind;
+  kind: "news";
   title: string;
   slug: string;
   date: string;
@@ -39,7 +37,6 @@ export function PostUploadForm({ password }: { password: string }) {
   const [state, setState] = useState<UploadState>("idle");
   const [workLoadState, setWorkLoadState] = useState<LoadState>("idle");
   const [message, setMessage] = useState("");
-  const [kind, setKind] = useState<PostKind>("activities");
   const [postTab, setPostTab] = useState<PostTab>("add");
   const [works, setWorks] = useState<AdminWork[]>([]);
   const [posts, setPosts] = useState<AdminPost[]>([]);
@@ -121,7 +118,6 @@ export function PostUploadForm({ password }: { password: string }) {
       setState("success");
       setMessage(result.message ?? "保存しました。新しいコミットからVercelが再デプロイします。");
       form.reset();
-      setKind("activities");
       setAddWorkImages([]);
       setAddWorkPickerOpen(false);
       setDateKey((current) => current + 1);
@@ -224,26 +220,8 @@ export function PostUploadForm({ password }: { password: string }) {
 
     {postTab === "add" ? (
     <form onSubmit={handleSubmit} className="grid gap-5">
-      <div className="grid gap-4 border-b border-line pb-5 sm:grid-cols-2">
-        <label className="grid gap-2 text-sm text-muted">
-          種類
-          <select
-            name="kind"
-            value={kind}
-            onChange={(event) => setKind(event.target.value as PostKind)}
-            className="border border-line bg-bone px-3 py-2.5 text-ink"
-            required
-          >
-            {([
-              ["activities", "活動記録"],
-              ["news", "お知らせ"]
-            ] as Array<[PostKind, string]>).map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </label>
+      <div className="grid gap-4 border-b border-line pb-5">
+        <input type="hidden" name="kind" value="news" />
         <input type="hidden" name="password" value={password} />
       </div>
 
@@ -348,7 +326,7 @@ export function PostUploadForm({ password }: { password: string }) {
           >
             {posts.map((post) => (
               <option key={post.contentPath} value={post.contentPath}>
-                {post.kind === "activities" ? "活動記録" : "お知らせ"}: {post.title}
+                お知らせ: {post.title}
               </option>
             ))}
           </select>
@@ -428,14 +406,8 @@ function PostEditForm({
       <input type="hidden" name="password" value={password} />
       <input type="hidden" name="contentPath" value={post.contentPath} />
       <input type="hidden" name="contentSha" value={post.contentSha} />
-      <input type="hidden" name="kind" value={post.kind} />
-      <div className="grid gap-4 sm:grid-cols-4">
-        <div className="grid gap-2 text-sm text-muted">
-          種類
-          <p className="border border-line bg-paper px-3 py-2.5 text-ink">
-            {post.kind === "activities" ? "活動記録" : "お知らせ"}
-          </p>
-        </div>
+      <input type="hidden" name="kind" value="news" />
+      <div className="grid gap-4 sm:grid-cols-3">
         <label className="grid gap-2 text-sm text-muted">
           タイトル
           <input name="title" defaultValue={post.title} className="border border-line bg-bone px-3 py-2.5 text-ink" required />
@@ -536,7 +508,7 @@ function WorkImagePicker({
       <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-ink pb-3">
         <div>
           <p className="text-sm font-black text-ink">作品集から画像を貼り付ける</p>
-          <p className="mt-1 text-xs font-bold text-muted">お知らせ・活動記録どちらにも既存作品の画像を入れられます。</p>
+          <p className="mt-1 text-xs font-bold text-muted">お知らせに既存作品の画像を入れられます。</p>
         </div>
         <div className="flex flex-wrap gap-2">
           {open ? (
@@ -579,17 +551,15 @@ function WorkImagePicker({
       )}
 
       {open && works.length > 0 ? (
-        <div className="grid max-h-[360px] gap-3 overflow-y-auto border-t-2 border-ink pt-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid max-h-[260px] gap-2 overflow-y-auto border-t-2 border-ink pt-3">
           {works.map((work) => (
             <button
               key={work.slug}
               type="button"
               onClick={() => onSelect(work.image)}
-              className="grid gap-2 border-2 border-ink bg-paper p-2 text-left text-sm font-black text-ink transition hover:bg-[#b8ff6a]"
+              className="border-2 border-ink bg-paper px-3 py-2 text-left text-sm font-black text-ink transition hover:bg-[#b8ff6a]"
             >
-              <img src={work.image} alt="" className="aspect-[4/3] w-full border-2 border-ink object-cover" />
-              <span>{work.title}</span>
-              <span className="text-xs text-muted">{work.author}</span>
+              {work.title}
             </button>
           ))}
         </div>
