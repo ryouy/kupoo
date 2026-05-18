@@ -1,6 +1,6 @@
 ---
 title: "さくら"
-author: "製作者不明"
+author: "だいおう"
 slug: "sakura"
 image: "/images/paintings/sakura.jpg"
 date: "2026-04-18"
