@@ -1,6 +1,6 @@
 ---
 title: "太平洋の海"
-author: "製作者不明"
+author: "だいおう"
 slug: "umi"
 image: "/images/paintings/umi.png"
 date: "2026-05-15"
