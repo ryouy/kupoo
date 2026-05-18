@@ -1,6 +1,6 @@
 ---
 title: "iwabi-peng"
-author: "ティラノ"
+author: "しなちく"
 slug: "iwabi-peng"
 image: "/images/paintings/iwabi-peng.png"
 date: "2026-05-09"
