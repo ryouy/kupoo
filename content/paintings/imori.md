@@ -1,6 +1,6 @@
 ---
 title: "🦎山"
-author: "ティラノ1"
+author: "だいおう"
 slug: "imori"
 image: "/images/paintings/imori.jpg"
 date: "2026-05-09"
