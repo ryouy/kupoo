@@ -1,6 +1,6 @@
 ---
 title: "白馬の"
-author: "てんとう虫"
+author: "だいおう"
 slug: "oide"
 image: "/images/paintings/oide.jpg"
 date: "2025-11-02"
