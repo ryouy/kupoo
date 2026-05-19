@@ -44,7 +44,7 @@ export function AdminInquiriesPanel({ password }: { password: string }) {
   const [state, setState] = useState<LoadState>("idle");
   const [message, setMessage] = useState("");
 
-  async function loadInquiries(nextId?: string) {
+  async function loadInquiries(nextId?: string | null) {
     if (!password.trim()) {
       setState("error");
       setMessage("管理パスワードを入力してください。");
@@ -64,7 +64,7 @@ export function AdminInquiriesPanel({ password }: { password: string }) {
       }
 
       setItems(result.inquiries);
-      const id = nextId ?? selected?.id ?? result.inquiries[0]?.id;
+      const id = nextId === null ? result.inquiries[0]?.id : nextId ?? selected?.id ?? result.inquiries[0]?.id;
       if (id) {
         await loadInquiry(id, false);
       }
@@ -136,6 +136,43 @@ export function AdminInquiriesPanel({ password }: { password: string }) {
     }
   }
 
+  async function deleteSelectedInquiry() {
+    if (!selected) {
+      return;
+    }
+
+    const confirmed = window.confirm(`「${selected.nickname}」の問い合わせチャットを削除しますか？`);
+
+    if (!confirmed) {
+      return;
+    }
+
+    setState("loading");
+    setMessage("");
+
+    try {
+      const response = await fetch("/api/admin/inquiries", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password, id: selected.id })
+      });
+      const result = (await response.json()) as { message?: string };
+
+      if (!response.ok) {
+        throw new Error(result.message ?? "問い合わせを削除できませんでした。");
+      }
+
+      const successMessage = result.message ?? "問い合わせチャットを削除しました。";
+      setSelected(null);
+      setReply("");
+      await loadInquiries(null);
+      setMessage(successMessage);
+    } catch (error) {
+      setState("error");
+      setMessage(error instanceof Error ? error.message : "問い合わせを削除できませんでした。");
+    }
+  }
+
   return (
     <section className="grid gap-4">
       <div className="flex justify-end border-b border-line pb-4">
@@ -173,9 +210,19 @@ export function AdminInquiriesPanel({ password }: { password: string }) {
         <div className="min-h-80 border-4 border-ink bg-paper p-4 shadow-quiet">
           {selected ? (
             <div className="grid gap-4">
-              <div className="border-b-2 border-ink pb-3">
-                <p className="text-xs font-black text-muted">問い合わせチャット</p>
-                <h2 className="text-xl font-black text-ink">{selected.nickname}</h2>
+              <div className="grid gap-3 border-b-2 border-ink pb-3 sm:grid-cols-[1fr_auto] sm:items-start">
+                <div>
+                  <p className="text-xs font-black text-muted">問い合わせチャット</p>
+                  <h2 className="text-xl font-black text-ink">{selected.nickname}</h2>
+                </div>
+                <button
+                  type="button"
+                  onClick={deleteSelectedInquiry}
+                  disabled={state === "loading"}
+                  className="w-fit border-2 border-ink bg-bone px-3 py-2 text-xs font-black text-[#d92755] transition hover:bg-[#ffde59] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  削除
+                </button>
               </div>
               <div className="grid max-h-[30rem] gap-3 overflow-y-auto pr-1">
                 {selected.messages.map((item) => (

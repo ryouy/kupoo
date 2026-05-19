@@ -1,6 +1,7 @@
 import { createCipheriv, createDecipheriv, createHash, randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
 import {
   createGithubFile,
+  deleteGithubFile,
   getGithubContent,
   updateGithubFile
 } from "@/lib/github-admin";
@@ -301,6 +302,14 @@ export async function appendInquiryMessage({
   await updateGithubFile(filePath(id), sha, encryptInquiry(nextInquiry), `Update contact inquiry ${id}`);
 
   return publicInquiry(nextInquiry);
+}
+
+export async function deleteInquiry(id: string) {
+  const { inquiry, sha } = await readInquiry(id);
+
+  await deleteGithubFile(filePath(id), sha, `Delete contact inquiry ${id}`);
+
+  return publicInquiry(inquiry);
 }
 
 export async function listInquiries() {
