@@ -12,6 +12,9 @@ export const metadata: Metadata = {
 
 export default function AdminPage() {
   const authorOptions = getMembers().map((member) => member.name);
+  const owner = process.env.GITHUB_OWNER;
+  const repo = process.env.GITHUB_REPO;
+  const githubUrl = owner && repo ? `https://github.com/${owner}/${repo}` : "https://github.com";
 
-  return <AdminPageContent authors={authorOptions} />;
+  return <AdminPageContent authors={authorOptions} githubUrl={githubUrl} />;
 }

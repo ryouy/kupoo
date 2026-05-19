@@ -49,6 +49,15 @@ body > * {
   will-change: transform;
 }
 
+.kupoo-wobble-button {
+  animation: kupoo-button-wobble 3.6s ease-in-out infinite;
+  transform-origin: 50% 80%;
+}
+
+.kupoo-wobble-button:nth-child(2) {
+  animation-delay: -1.2s;
+}
+
 .floating-art-logo {
   animation: kupoo-art-float-logo 9s ease-in-out infinite;
 }
@@ -137,6 +146,17 @@ body > * {
 
   50% {
     transform: translate3d(10px, -12px, 0) rotate(0.7deg);
+  }
+}
+
+@keyframes kupoo-button-wobble {
+  0%,
+  100% {
+    transform: rotate(-2deg) translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: rotate(2deg) translate3d(0, -2px, 0);
   }
 }
 

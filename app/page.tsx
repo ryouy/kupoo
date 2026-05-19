@@ -11,8 +11,18 @@ function pickRandomItems<T>(items: T[], limit: number) {
     .slice(0, limit);
 }
 
+const randomFrameStyles = [
+  "aspect-[4/5] sm:col-span-1",
+  "aspect-[5/4] sm:col-span-1",
+  "aspect-square sm:col-span-1",
+  "aspect-[3/4] sm:col-span-1",
+  "aspect-[6/5] sm:col-span-2",
+  "aspect-[7/4] sm:col-span-2"
+];
+
 export default function Home() {
-  const featuredItems = pickRandomItems(getGalleryItems("paintings"), 4);
+  const featuredCount = 4 + Math.floor(Math.random() * 4);
+  const featuredItems = pickRandomItems(getGalleryItems("paintings"), featuredCount);
   const latestNews = getLatestNews(3);
   const site = getSiteContent();
 
@@ -36,23 +46,17 @@ export default function Home() {
             <div className="flex flex-wrap gap-3 text-sm font-black">
               <Link
                 href="/paintings"
-                className="border-4 border-ink bg-[#ff5e8f] px-5 py-3 text-ink shadow-quiet transition hover:-translate-y-1"
+                className="kupoo-wobble-button inline-block rotate-[-2deg] border-4 border-ink bg-[#ff5e8f] px-5 py-3 text-ink shadow-quiet transition hover:-translate-y-1"
               >
                 {site.home.primaryCta}
               </Link>
               <Link
                 href="/about"
-                className="border-4 border-ink bg-bone px-5 py-3 text-ink shadow-quiet transition hover:-translate-y-1"
+                className="kupoo-wobble-button inline-block rotate-[2deg] border-4 border-ink bg-[#ffde59] px-5 py-3 text-ink shadow-quiet transition hover:-translate-y-1"
               >
                 {site.home.secondaryCta}
               </Link>
             </div>
-            <Link
-              href="/news"
-              className="mt-5 block w-full border-2 border-ink bg-[#b8ff6a] px-5 py-2.5 text-center text-sm font-black text-ink shadow-[3px_3px_0_#21180f] transition hover:-translate-y-0.5"
-            >
-              お知らせ
-            </Link>
           </div>
           <section className="mt-8 max-w-xl border-4 border-ink bg-bone/85 p-4 shadow-quiet">
             <div className="mb-3 flex items-end justify-between gap-3 border-b-2 border-ink pb-3">
@@ -83,7 +87,7 @@ export default function Home() {
           </section>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 auto-rows-auto gap-3 sm:gap-4">
           <div className="floating-art floating-art-logo group relative col-span-2 overflow-hidden border-4 border-ink bg-bone shadow-quiet">
             <img
               src="/kupoo-logo.svg"
@@ -95,9 +99,7 @@ export default function Home() {
             <Link
               key={item.slug}
               href={`/${item.kind}/${item.slug}`}
-              className={`floating-art floating-art-${index + 1} group relative overflow-hidden border-4 border-ink bg-bone shadow-quiet ${
-                index === 0 || index === 3 ? "aspect-[4/5]" : "aspect-[5/4]"
-              }`}
+              className={`floating-art floating-art-${(index % 4) + 1} group relative overflow-hidden border-4 border-ink bg-bone shadow-quiet ${randomFrameStyles[Math.floor(Math.random() * randomFrameStyles.length)]}`}
             >
               <img
                 src={item.image}

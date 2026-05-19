@@ -16,7 +16,7 @@ export default function NewsPage() {
         <div className="lg:text-center">
           <h1 className="text-4xl font-black leading-none tracking-normal text-ink sm:text-6xl">お知らせ</h1>
           <p className="mt-3 text-base font-bold leading-7 text-muted">
-            展示、活動予定、ちょっとした連絡などをまとめます。
+            展示、活動予定、ちょっとした連絡など。
           </p>
         </div>
       </header>

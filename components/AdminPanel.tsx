@@ -2,12 +2,13 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { AdminInquiriesPanel } from "@/components/AdminInquiriesPanel";
 import { PostUploadForm } from "@/components/PostUploadForm";
 import { UploadForm } from "@/components/UploadForm";
 import { UNKNOWN_AUTHOR } from "@/lib/authors";
 import type { Member, SiteContent } from "@/lib/site-data";
 
-type Section = "works" | "posts" | "site" | "members";
+type Section = "works" | "posts" | "inquiries" | "site" | "members";
 type Tab = "add" | "edit" | "delete";
 type Kind = "paintings";
 
@@ -38,6 +39,7 @@ const tabs: Array<{ id: Tab; label: string }> = [
 const sections: Array<{ id: Section; label: string }> = [
   { id: "works", label: "作品集" },
   { id: "posts", label: "お知らせ" },
+  { id: "inquiries", label: "問い合わせ" },
   { id: "members", label: "メンバー" },
   { id: "site", label: "サイト文言" }
 ];
@@ -506,6 +508,8 @@ export function AdminPanel({
           <PostUploadForm password={password} />
         </section>
       ) : null}
+
+      {section === "inquiries" ? <AdminInquiriesPanel password={password} /> : null}
 
       {section === "works" ? (
       <>

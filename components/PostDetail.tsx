@@ -19,14 +19,11 @@ export function PostDetail({
     <article className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-14">
       <div className="mb-8">
         <Link href={backHref} className="border-2 border-ink bg-[#57d4c4] px-3 py-2 text-sm font-black text-ink shadow-[3px_3px_0_#21180f] transition hover:-translate-y-0.5">
-          {label}へ戻る
+          {label}一覧へ戻る
         </Link>
       </div>
 
       <header className="mb-6 border-b-4 border-ink pb-5">
-        <p className="mb-3 w-fit border-2 border-ink bg-[#ffde59] px-3 py-1 text-sm font-black text-ink">
-          {label}
-        </p>
         <h1 className="max-w-4xl text-3xl font-black leading-tight text-ink sm:text-5xl">{item.title}</h1>
         <p className="mt-3 text-sm font-black text-muted">{formatPostDate(item.date)}</p>
       </header>
