@@ -54,13 +54,15 @@ const emptyMember: Member = {
 export function AdminPanel({
   authors = [],
   password,
-  setPassword
+  setPassword,
+  initialSection = "works"
 }: {
   authors?: string[];
   password: string;
   setPassword: (value: string) => void;
+  initialSection?: Section;
 }) {
-  const [section, setSection] = useState<Section>("works");
+  const [section, setSection] = useState<Section>(initialSection);
   const [tab, setTab] = useState<Tab>("add");
   const selectedKind: Kind = "paintings";
   const [works, setWorks] = useState<AdminWork[]>([]);

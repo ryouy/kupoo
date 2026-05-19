@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createInquiry, readVisitorInquiry } from "@/lib/contact-inquiries";
+import { createInquiry, findVisitorInquiry } from "@/lib/contact-inquiries";
 
 function clean(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
@@ -30,15 +30,14 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   try {
     const url = new URL(request.url);
-    const id = clean(url.searchParams.get("id"));
     const nickname = clean(url.searchParams.get("nickname"));
     const password = clean(url.searchParams.get("password"));
 
-    if (!id || !nickname || !password) {
-      return NextResponse.json({ message: "問い合わせID、ニックネーム、パスワードを入力してください。" }, { status: 400 });
+    if (!nickname || !password) {
+      return NextResponse.json({ message: "ニックネーム、パスワードを入力してください。" }, { status: 400 });
     }
 
-    const inquiry = await readVisitorInquiry({ id, nickname, password });
+    const inquiry = await findVisitorInquiry({ nickname, password });
 
     return NextResponse.json({ inquiry });
   } catch (error) {

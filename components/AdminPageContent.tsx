@@ -3,7 +3,17 @@
 import { useState } from "react";
 import { AdminPanel } from "@/components/AdminPanel";
 
-export function AdminPageContent({ authors, githubUrl }: { authors: string[]; githubUrl: string }) {
+type AdminSection = "works" | "posts" | "inquiries" | "site" | "members";
+
+export function AdminPageContent({
+  authors,
+  githubUrl,
+  initialSection
+}: {
+  authors: string[];
+  githubUrl: string;
+  initialSection?: AdminSection;
+}) {
   const [password, setPassword] = useState("");
 
   return (
@@ -30,7 +40,7 @@ export function AdminPageContent({ authors, githubUrl }: { authors: string[]; gi
           />
         </label>
       </header>
-      <AdminPanel authors={authors} password={password} setPassword={setPassword} />
+      <AdminPanel authors={authors} password={password} setPassword={setPassword} initialSection={initialSection} />
     </div>
   );
 }

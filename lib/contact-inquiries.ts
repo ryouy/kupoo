@@ -111,6 +111,24 @@ function publicInquiry(inquiry: ContactInquiry) {
   };
 }
 
+function appendMessage(inquiry: ContactInquiry, sender: "visitor" | "admin", body: string) {
+  const now = new Date().toISOString();
+
+  return {
+    ...inquiry,
+    updatedAt: now,
+    messages: [
+      ...inquiry.messages,
+      {
+        id: randomBytes(8).toString("hex"),
+        sender,
+        body,
+        createdAt: now
+      }
+    ]
+  };
+}
+
 export function summarizeInquiry(inquiry: ContactInquiry): ContactInquirySummary {
   const lastMessage = inquiry.messages[inquiry.messages.length - 1]?.body ?? "";
 
@@ -133,6 +151,15 @@ export async function createInquiry({
   password: string;
   body: string;
 }) {
+  const existing = await findVisitorInquiryEntry({ nickname, password });
+
+  if (existing) {
+    const nextInquiry = appendMessage(existing.inquiry, "visitor", body);
+    await updateGithubFile(filePath(nextInquiry.id), existing.sha, encryptInquiry(nextInquiry), `Update contact inquiry ${nextInquiry.id}`);
+
+    return publicInquiry(nextInquiry);
+  }
+
   const now = new Date().toISOString();
   const id = randomBytes(10).toString("hex");
   const passwordSalt = randomBytes(16).toString("hex");
@@ -189,6 +216,65 @@ export async function readVisitorInquiry({
   return publicInquiry(inquiry);
 }
 
+async function listInquiryEntries() {
+  const directory = await getGithubContent(inquiryDirectory);
+
+  if (!Array.isArray(directory)) {
+    return [];
+  }
+
+  const entries = await Promise.all(
+    directory
+      .filter((item) => item.type === "file" && item.name.endsWith(".json.enc"))
+      .map(async (item) => {
+        const file = await getGithubContent(item.path);
+
+        if (!file || Array.isArray(file) || !file.content) {
+          return null;
+        }
+
+        return {
+          inquiry: decryptInquiry(decodeGithubSource(file.content)),
+          sha: file.sha
+        };
+      })
+  );
+
+  return entries
+    .filter((entry): entry is { inquiry: ContactInquiry; sha: string } => Boolean(entry))
+    .sort((a, b) => new Date(b.inquiry.updatedAt).getTime() - new Date(a.inquiry.updatedAt).getTime());
+}
+
+async function findVisitorInquiryEntry({
+  nickname,
+  password
+}: {
+  nickname: string;
+  password: string;
+}) {
+  const entries = await listInquiryEntries();
+
+  return entries.find(({ inquiry }) => (
+    inquiry.nickname === nickname && verifyVisitorPassword(password, inquiry.passwordSalt, inquiry.passwordHash)
+  )) ?? null;
+}
+
+export async function findVisitorInquiry({
+  nickname,
+  password
+}: {
+  nickname: string;
+  password: string;
+}) {
+  const entry = await findVisitorInquiryEntry({ nickname, password });
+
+  if (!entry) {
+    throw new Error("ニックネームまたはパスワードが違います。");
+  }
+
+  return publicInquiry(entry.inquiry);
+}
+
 export async function appendInquiryMessage({
   id,
   sender,
@@ -210,20 +296,7 @@ export async function appendInquiryMessage({
     }
   }
 
-  const now = new Date().toISOString();
-  const nextInquiry: ContactInquiry = {
-    ...inquiry,
-    updatedAt: now,
-    messages: [
-      ...inquiry.messages,
-      {
-        id: randomBytes(8).toString("hex"),
-        sender,
-        body,
-        createdAt: now
-      }
-    ]
-  };
+  const nextInquiry = appendMessage(inquiry, sender, body);
 
   await updateGithubFile(filePath(id), sha, encryptInquiry(nextInquiry), `Update contact inquiry ${id}`);
 
@@ -231,29 +304,9 @@ export async function appendInquiryMessage({
 }
 
 export async function listInquiries() {
-  const directory = await getGithubContent(inquiryDirectory);
+  const entries = await listInquiryEntries();
 
-  if (!Array.isArray(directory)) {
-    return [];
-  }
-
-  const inquiries = await Promise.all(
-    directory
-      .filter((item) => item.type === "file" && item.name.endsWith(".json.enc"))
-      .map(async (item) => {
-        const file = await getGithubContent(item.path);
-
-        if (!file || Array.isArray(file) || !file.content) {
-          return null;
-        }
-
-        return decryptInquiry(decodeGithubSource(file.content));
-      })
-  );
-
-  return inquiries
-    .filter((inquiry): inquiry is ContactInquiry => Boolean(inquiry))
-    .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+  return entries.map((entry) => entry.inquiry);
 }
 
 export function toPublicInquiry(inquiry: ContactInquiry) {

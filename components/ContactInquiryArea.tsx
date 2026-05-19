@@ -23,7 +23,6 @@ export function ContactInquiryArea() {
   const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
   const [body, setBody] = useState("");
-  const [inquiryId, setInquiryId] = useState("");
   const [replyBody, setReplyBody] = useState("");
   const [inquiry, setInquiry] = useState<PublicInquiry | null>(null);
   const [state, setState] = useState<State>("idle");
@@ -47,11 +46,10 @@ export function ContactInquiryArea() {
       }
 
       setInquiry(result.inquiry);
-      setInquiryId(result.inquiry.id);
       setBody("");
       setMode("check");
       setState("success");
-      setMessage("送信しました。問い合わせIDを控えて、返信確認に使ってください。");
+      setMessage("送信しました。返信はニックネームとパスワードで確認できます。");
     } catch (error) {
       setState("error");
       setMessage(error instanceof Error ? error.message : "送信できませんでした。");
@@ -65,7 +63,6 @@ export function ContactInquiryArea() {
 
     try {
       const params = new URLSearchParams({
-        id: inquiryId,
         nickname,
         password
       });
@@ -90,7 +87,11 @@ export function ContactInquiryArea() {
     setMessage("");
 
     try {
-      const response = await fetch(`/api/contact/inquiries/${encodeURIComponent(inquiryId)}/messages`, {
+      if (!inquiry) {
+        throw new Error("先にチャットを開いてください。");
+      }
+
+      const response = await fetch(`/api/contact/inquiries/${encodeURIComponent(inquiry.id)}/messages`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nickname, password, body: replyBody })
@@ -134,12 +135,6 @@ export function ContactInquiryArea() {
 
       <div className="grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
         <form onSubmit={mode === "new" ? createInquiry : loadInquiry} className="grid content-start gap-4">
-          {mode === "check" ? (
-            <label className="grid gap-2 text-sm font-bold text-muted">
-              問い合わせID
-              <input value={inquiryId} onChange={(event) => setInquiryId(event.target.value)} className="border-2 border-ink bg-paper px-3 py-2.5 text-ink" required />
-            </label>
-          ) : null}
           <label className="grid gap-2 text-sm font-bold text-muted">
             ニックネーム
             <input value={nickname} onChange={(event) => setNickname(event.target.value)} className="border-2 border-ink bg-paper px-3 py-2.5 text-ink" required />
@@ -168,8 +163,8 @@ export function ContactInquiryArea() {
           {inquiry ? (
             <div className="grid gap-4">
               <div className="border-b-2 border-ink pb-3">
-                <p className="text-xs font-black text-muted">問い合わせID</p>
-                <p className="break-all text-lg font-black text-ink">{inquiry.id}</p>
+                <p className="text-xs font-black text-muted">問い合わせチャット</p>
+                <p className="text-lg font-black text-ink">{inquiry.nickname}</p>
               </div>
               <div className="grid max-h-[28rem] gap-3 overflow-y-auto pr-1">
                 {inquiry.messages.map((item) => (
@@ -188,7 +183,7 @@ export function ContactInquiryArea() {
             </div>
           ) : (
             <div className="grid h-full place-items-center text-center text-sm font-black leading-7 text-muted">
-              問い合わせを送るか、ID・ニックネーム・パスワードでチャットを開けます。
+              問い合わせを送るか、ニックネーム・パスワードでチャットを開けます。
             </div>
           )}
         </div>
