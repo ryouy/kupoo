@@ -24,6 +24,19 @@ type Inquiry = {
 
 type LoadState = "idle" | "loading" | "ready" | "error";
 
+function formatMessageTime(value: string) {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  return new Intl.DateTimeFormat("ja-JP", {
+    hour: "2-digit",
+    minute: "2-digit"
+  }).format(date);
+}
+
 export function AdminInquiriesPanel({ password }: { password: string }) {
   const [items, setItems] = useState<InquirySummary[]>([]);
   const [selected, setSelected] = useState<Inquiry | null>(null);
@@ -161,14 +174,17 @@ export function AdminInquiriesPanel({ password }: { password: string }) {
           {selected ? (
             <div className="grid gap-4">
               <div className="border-b-2 border-ink pb-3">
-                <p className="text-xs font-black text-muted">問い合わせID</p>
-                <h2 className="break-all text-xl font-black text-ink">{selected.id}</h2>
+                <p className="text-xs font-black text-muted">問い合わせチャット</p>
+                <h2 className="text-xl font-black text-ink">{selected.nickname}</h2>
               </div>
               <div className="grid max-h-[30rem] gap-3 overflow-y-auto pr-1">
                 {selected.messages.map((item) => (
                   <div key={item.id} className={`max-w-[88%] border-2 border-ink p-3 ${item.sender === "admin" ? "justify-self-end bg-[#57d4c4]" : "justify-self-start bg-[#ffde59]"}`}>
                     <p className="mb-1 text-xs font-black text-muted">{item.sender === "admin" ? "管理者" : selected.nickname}</p>
                     <p className="whitespace-pre-line text-sm font-bold leading-6 text-ink">{item.body}</p>
+                    <time dateTime={item.createdAt} className="mt-1 block text-right text-[10px] font-black leading-none text-muted">
+                      {formatMessageTime(item.createdAt)}
+                    </time>
                   </div>
                 ))}
               </div>

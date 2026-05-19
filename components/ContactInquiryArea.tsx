@@ -18,6 +18,19 @@ type PublicInquiry = {
 type Mode = "new" | "check";
 type State = "idle" | "loading" | "success" | "error";
 
+function formatMessageTime(value: string) {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  return new Intl.DateTimeFormat("ja-JP", {
+    hour: "2-digit",
+    minute: "2-digit"
+  }).format(date);
+}
+
 export function ContactInquiryArea() {
   const [mode, setMode] = useState<Mode>("new");
   const [nickname, setNickname] = useState("");
@@ -171,6 +184,9 @@ export function ContactInquiryArea() {
                   <div key={item.id} className={`max-w-[88%] border-2 border-ink p-3 ${item.sender === "visitor" ? "justify-self-end bg-[#ffde59]" : "justify-self-start bg-[#57d4c4]"}`}>
                     <p className="mb-1 text-xs font-black text-muted">{item.sender === "visitor" ? inquiry.nickname : "Kupoo"}</p>
                     <p className="whitespace-pre-line text-sm font-bold leading-6 text-ink">{item.body}</p>
+                    <time dateTime={item.createdAt} className="mt-1 block text-right text-[10px] font-black leading-none text-muted">
+                      {formatMessageTime(item.createdAt)}
+                    </time>
                   </div>
                 ))}
               </div>
