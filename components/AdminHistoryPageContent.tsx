@@ -12,17 +12,22 @@ const adminMenuItems = [
   { href: "/admin?section=site", label: "サイト文言" }
 ];
 
-export function AdminHistoryPageContent() {
+export function AdminHistoryPageContent({ githubUrl }: { githubUrl: string }) {
   const [password, setPassword] = useState("");
 
   return (
     <div className="mx-auto max-w-5xl px-5 py-6 sm:px-8 sm:py-8">
       <header className="mb-5 grid gap-4 border-b border-line pb-4 sm:grid-cols-[1fr_auto] sm:items-end">
-        <div>
-          <Link href="/admin" className="mb-3 inline-block text-sm font-black text-muted transition hover:text-ink">
-            管理ページへ戻る
-          </Link>
-          <p className="text-sm text-muted">編集履歴</p>
+        <div className="flex flex-wrap items-center gap-3">
+          <p className="text-sm text-muted">管理ページ</p>
+          <a
+            href={githubUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="border-2 border-ink bg-[#ffde59] px-3 py-1.5 text-xs font-black text-ink shadow-[3px_3px_0_#21180f] transition hover:-translate-y-0.5"
+          >
+            GitHubを開く
+          </a>
         </div>
         <label className="grid w-56 gap-1.5 text-xs text-muted">
           管理パスワード

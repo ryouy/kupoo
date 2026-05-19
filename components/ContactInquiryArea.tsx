@@ -141,7 +141,7 @@ export function ContactInquiryArea() {
           </label>
           <label className="grid gap-2 text-sm font-bold text-muted">
             パスワード
-            <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} className="border-2 border-ink bg-paper px-3 py-2.5 text-ink" required />
+            <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete="new-password" className="border-2 border-ink bg-paper px-3 py-2.5 text-ink" required />
           </label>
           {mode === "new" ? (
             <label className="grid gap-2 text-sm font-bold text-muted">
@@ -160,7 +160,7 @@ export function ContactInquiryArea() {
         </form>
 
         <div className="min-h-64 border-4 border-ink bg-paper p-4">
-          {inquiry ? (
+          {mode === "check" && inquiry ? (
             <div className="grid gap-4">
               <div className="border-b-2 border-ink pb-3">
                 <p className="text-xs font-black text-muted">問い合わせチャット</p>
@@ -181,9 +181,13 @@ export function ContactInquiryArea() {
                 </button>
               </form>
             </div>
-          ) : (
+          ) : mode === "check" ? (
             <div className="grid h-full place-items-center text-center text-sm font-black leading-7 text-muted">
               問い合わせを送るか、ニックネーム・パスワードでチャットを開けます。
+            </div>
+          ) : (
+            <div className="grid h-full place-items-center text-center text-sm font-black leading-7 text-muted">
+              ニックネームとパスワードを決めて、問い合わせを送れます。
             </div>
           )}
         </div>

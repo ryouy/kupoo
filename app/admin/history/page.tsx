@@ -10,5 +10,9 @@ export const metadata: Metadata = {
 };
 
 export default function AdminHistoryPage() {
-  return <AdminHistoryPageContent />;
+  const owner = process.env.GITHUB_OWNER;
+  const repo = process.env.GITHUB_REPO;
+  const githubUrl = owner && repo ? `https://github.com/${owner}/${repo}` : "https://github.com";
+
+  return <AdminHistoryPageContent githubUrl={githubUrl} />;
 }
