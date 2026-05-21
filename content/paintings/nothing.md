@@ -1,6 +1,6 @@
 ---
 title: "無邪気"
-author: "しなちく"
+author: "らかおし"
 slug: "eve"
 image: "/images/paintings/nothing.png"
 date: "2026-05-10"
