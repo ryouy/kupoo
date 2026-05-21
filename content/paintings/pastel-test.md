@@ -1,6 +1,6 @@
 ---
 title: "パステルのれんしゅう"
-author: "しなちく"
+author: "らかおし"
 slug: "pastel-test"
 image: "/images/paintings/pastel-test.jpg"
 date: "2026-05-05"
