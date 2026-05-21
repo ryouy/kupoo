@@ -1,6 +1,6 @@
 ---
 title: "秋のトンネル"
-author: "しなちく"
+author: "らかおし"
 slug: "aki"
 image: "/images/paintings/aki.jpg"
 date: "2026-04-08"
