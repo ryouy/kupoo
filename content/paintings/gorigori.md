@@ -1,6 +1,6 @@
 ---
 title: "ゴレイヌ"
-author: "しなちく"
+author: "らかおし"
 slug: "gorigori"
 image: "/images/paintings/gorigori.png"
 date: "2026-05-20"
