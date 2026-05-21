@@ -1,6 +1,6 @@
 ---
 title: "オーラ"
-author: "しなちく"
+author: "らかおし"
 slug: "aura"
 image: "/images/paintings/aura.jpg"
 date: "2026-04-18"
