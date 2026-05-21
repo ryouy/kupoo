@@ -1,5 +1,5 @@
 ---
-title: "白馬の"
+title: "白馬"
 author: "だいおう"
 slug: "oide"
 image: "/images/paintings/oide.jpg"
