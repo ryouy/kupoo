@@ -1,5 +1,5 @@
 ---
-title: "Zermatt after 3 days of disaster"
+title: "ツェルマットより"
 author: "らかおし"
 slug: "zermatt"
 image: "/images/paintings/zermatt.jpg"
