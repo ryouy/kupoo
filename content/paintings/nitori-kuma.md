@@ -1,6 +1,6 @@
 ---
 title: "nitori-kuma"
-author: "しなちく"
+author: "らかおし"
 slug: "nitori-kuma"
 image: "/images/paintings/nitori-kuma.png"
 date: "2025-06-09"
