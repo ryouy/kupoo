@@ -1,6 +1,6 @@
 ---
 title: "み"
-author: "しなちく"
+author: "らかおし"
 slug: "mi"
 image: "/images/paintings/mi.jpg"
 date: "2025-12-10"
