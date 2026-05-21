@@ -1,6 +1,6 @@
 ---
 title: "Zermatt after 3 days of disaster"
-author: "しなちく"
+author: "らかおし"
 slug: "zermatt"
 image: "/images/paintings/zermatt.jpg"
 date: "2026-04-08"
