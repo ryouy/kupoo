@@ -1,6 +1,6 @@
 ---
 title: "iwabi-peng"
-author: "しなちく"
+author: "らかおし"
 slug: "iwabi-peng"
 image: "/images/paintings/iwabi-peng.png"
 date: "2026-05-09"
