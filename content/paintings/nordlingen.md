@@ -1,9 +1,9 @@
 ---
-title: "Nördlingen"
+title: "隕石町"
 author: "らかおし"
 slug: "nordlingen"
 image: "/images/paintings/nordlingen.png"
 date: "2026-04-07"
 materials: "watercolor"
 ---
-良い。
+人類は思い出した
