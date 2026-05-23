@@ -1,6 +1,6 @@
 ---
 title: "かまぬま1"
-author: "らかおし"
+author: "くじら"
 slug: "kamanuma1"
 image: "/images/paintings/kamanuma1.jpg"
 date: "2026-04-25"
