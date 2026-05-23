@@ -1,6 +1,6 @@
 ---
 title: "ツェルマットより"
-author: "らかおし"
+author: "くじら"
 slug: "zermatt"
 image: "/images/paintings/zermatt.jpg"
 date: "2026-04-08"
