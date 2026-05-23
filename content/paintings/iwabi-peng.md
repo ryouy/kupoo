@@ -1,6 +1,6 @@
 ---
 title: "岩飛び"
-author: "らかおし"
+author: "くじら"
 slug: "iwabi-peng"
 image: "/images/paintings/iwabi-peng.png"
 date: "2026-05-09"
