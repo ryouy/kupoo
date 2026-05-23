@@ -1,6 +1,6 @@
 ---
 title: "ながとこ"
-author: "らかおし"
+author: "くじら"
 slug: "tokotoko"
 image: "/images/paintings/tokotoko.jpg"
 date: "2025-11-22"
