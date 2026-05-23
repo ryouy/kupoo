@@ -1,6 +1,6 @@
 ---
 title: "ダルビッシュ"
-author: "らかおし"
+author: "くじら"
 slug: "daruma"
 image: "/images/paintings/daruma.jpg"
 date: "2025-12-10"
