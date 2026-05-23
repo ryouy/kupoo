@@ -1,6 +1,6 @@
 ---
 title: "Healthy man"
-author: "らかおし"
+author: "くじら"
 slug: "yasuo"
 image: "/images/paintings/yasuo.png"
 date: "2026-05-06"
