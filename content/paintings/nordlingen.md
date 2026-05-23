@@ -1,6 +1,6 @@
 ---
 title: "隕石町"
-author: "らかおし"
+author: "くじら"
 slug: "nordlingen"
 image: "/images/paintings/nordlingen.png"
 date: "2026-04-07"
